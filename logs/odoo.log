@@ -1,0 +1,518 @@
+2026-03-23 09:12:01,179 30213 INFO ? odoo: Odoo version 17.0 
+2026-03-23 09:12:01,179 30213 INFO ? odoo: Using configuration file at /opt/odoo-17.0/conf/odoo.conf 
+2026-03-23 09:12:01,179 30213 INFO ? odoo: addons paths: ['/opt/odoo-17.0/odoo/odoo/addons', '/opt/odoo-17.0/data/addons/17.0', '/opt/odoo-17.0/odoo/addons', '/opt/odoo-17.0/custom_addons'] 
+2026-03-23 09:12:01,180 30213 INFO ? odoo: database: odoo@localhost:default 
+2026-03-23 09:12:01,374 30213 INFO ? odoo.addons.base.models.ir_actions_report: Will use the Wkhtmltopdf binary at /usr/local/bin/wkhtmltopdf 
+2026-03-23 09:12:01,776 30213 WARNING ? odoo.service.server: 'inotify' module not installed. Code autoreload feature is disabled 
+2026-03-23 09:12:01,787 30213 INFO ? odoo.service.server: HTTP service (werkzeug) running on odoo:8069 
+2026-03-23 09:12:30,839 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:30] "GET / HTTP/1.1" 303 - 1 0.044 0.045
+2026-03-23 09:12:30,910 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:30] "GET /web HTTP/1.1" 303 - 2 0.006 0.052
+2026-03-23 09:12:31,463 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:31] "GET /web/database/selector HTTP/1.1" 200 - 2 0.007 0.534
+2026-03-23 09:12:37,733 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:37] "GET /web/static/lib/bootstrap/js/dist/dom/data.js HTTP/1.1" 200 - 1 0.002 6.189
+2026-03-23 09:12:37,741 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:37] "GET /web/static/lib/bootstrap/dist/css/bootstrap.css HTTP/1.1" 200 - 1 0.002 6.199
+2026-03-23 09:12:37,742 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:37] "GET /web/static/lib/bootstrap/js/dist/dom/manipulator.js HTTP/1.1" 200 - 1 0.002 6.192
+2026-03-23 09:12:37,743 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:37] "GET /web/static/src/libs/fontawesome/css/font-awesome.css HTTP/1.1" 200 - 1 0.002 6.204
+2026-03-23 09:12:37,747 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:37] "GET /web/static/lib/bootstrap/js/dist/dom/event-handler.js HTTP/1.1" 200 - 1 0.003 6.199
+2026-03-23 09:12:37,751 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:37] "GET /web/static/lib/bootstrap/js/dist/dom/selector-engine.js HTTP/1.1" 200 - 1 0.008 6.193
+2026-03-23 09:12:37,795 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:37] "GET /web/static/lib/bootstrap/js/dist/base-component.js HTTP/1.1" 200 - 1 0.002 0.040
+2026-03-23 09:12:37,796 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:37] "GET /web/static/lib/bootstrap/js/dist/modal.js HTTP/1.1" 200 - 1 0.002 0.037
+2026-03-23 09:12:37,800 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:37] "GET /web/static/src/public/database_manager.js HTTP/1.1" 200 - 1 0.002 0.036
+2026-03-23 09:12:37,830 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:37] "GET /web/static/img/favicon.ico HTTP/1.1" 200 - 1 0.003 0.025
+2026-03-23 09:12:37,834 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:37] "GET /web/static/img/logo2.png HTTP/1.1" 200 - 1 0.003 0.027
+2026-03-23 09:12:38,218 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:12:38] "GET /web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0 HTTP/1.1" 200 - 1 0.002 0.021
+2026-03-23 09:15:06,983 30213 INFO None odoo.service.db: Create database `o17-learn`. 
+2026-03-23 09:15:09,729 30213 INFO None odoo.modules.loading: loading 1 modules... 
+2026-03-23 09:15:09,729 30213 INFO None odoo.modules.loading: Loading module base (1/1) 
+2026-03-23 09:15:09,757 30213 INFO None odoo.modules.registry: module base: creating or updating database tables 
+2026-03-23 09:15:10,962 30213 INFO None odoo.models: Prepare computation of ir.module.module.menus_by_module 
+2026-03-23 09:15:10,963 30213 INFO None odoo.models: Prepare computation of ir.module.module.reports_by_module 
+2026-03-23 09:15:10,964 30213 INFO None odoo.models: Prepare computation of ir.module.module.views_by_module 
+2026-03-23 09:15:11,494 30213 INFO None odoo.models: Prepare computation of res.partner.user_id 
+2026-03-23 09:15:11,495 30213 INFO None odoo.models: Prepare computation of res.partner.commercial_partner_id 
+2026-03-23 09:15:11,495 30213 INFO None odoo.models: Prepare computation of res.partner.complete_name 
+2026-03-23 09:15:11,495 30213 INFO None odoo.models: Prepare computation of res.partner.company_registry 
+2026-03-23 09:15:11,495 30213 INFO None odoo.models: Prepare computation of res.partner.commercial_company_name 
+2026-03-23 09:15:11,495 30213 INFO None odoo.models: Prepare computation of res.partner.partner_share 
+2026-03-23 09:15:11,623 30213 INFO None odoo.models: Prepare computation of res.currency.decimal_places 
+2026-03-23 09:15:11,712 30213 INFO None odoo.models: Prepare computation of res.company.uses_default_logo 
+2026-03-23 09:15:11,712 30213 INFO None odoo.models: Prepare computation of res.company.logo_web 
+2026-03-23 09:15:11,722 30213 INFO None odoo.models: Computing parent_path for table res_company... 
+2026-03-23 09:15:11,802 30213 INFO None odoo.models: Prepare computation of res.users.signature 
+2026-03-23 09:15:11,803 30213 INFO None odoo.models: Prepare computation of res.users.share 
+2026-03-23 09:15:14,769 30213 INFO None odoo.modules.loading: loading base/data/res_bank.xml 
+2026-03-23 09:15:14,779 30213 INFO None odoo.modules.loading: loading base/data/res.lang.csv 
+2026-03-23 09:15:14,831 30213 INFO None odoo.modules.loading: loading base/data/res_lang_data.xml 
+2026-03-23 09:15:14,886 30213 INFO None odoo.modules.loading: loading base/data/res_partner_data.xml 
+2026-03-23 09:15:15,027 30213 INFO None odoo.modules.loading: loading base/data/res_currency_data.xml 
+2026-03-23 09:15:16,060 30213 INFO None odoo.modules.loading: loading base/data/res_company_data.xml 
+2026-03-23 09:15:16,074 30213 INFO None odoo.modules.loading: loading base/data/res_users_data.xml 
+2026-03-23 09:15:16,926 30213 INFO None odoo.modules.loading: loading base/data/report_paperformat_data.xml 
+2026-03-23 09:15:16,942 30213 INFO None odoo.modules.loading: loading base/data/res_country_data.xml 
+2026-03-23 09:15:17,672 30213 INFO None odoo.modules.loading: loading base/data/ir_demo_data.xml 
+2026-03-23 09:15:17,688 30213 INFO None odoo.modules.loading: loading base/security/base_groups.xml 
+2026-03-23 09:15:18,375 30213 INFO None odoo.modules.loading: loading base/security/base_security.xml 
+2026-03-23 09:15:18,576 30213 INFO None odoo.modules.loading: loading base/views/base_menus.xml 
+2026-03-23 09:15:18,702 30213 INFO None odoo.modules.loading: loading base/views/decimal_precision_views.xml 
+2026-03-23 09:15:18,728 30213 INFO None odoo.modules.loading: loading base/views/res_config_views.xml 
+2026-03-23 09:15:18,742 30213 INFO None odoo.modules.loading: loading base/data/res.country.state.csv 
+2026-03-23 09:15:19,885 30213 INFO None odoo.modules.loading: loading base/views/ir_actions_views.xml 
+2026-03-23 09:15:20,092 30213 INFO None odoo.modules.loading: loading base/views/ir_asset_views.xml 
+2026-03-23 09:15:20,124 30213 INFO None odoo.modules.loading: loading base/views/ir_config_parameter_views.xml 
+2026-03-23 09:15:20,158 30213 INFO None odoo.modules.loading: loading base/views/ir_cron_views.xml 
+2026-03-23 09:15:20,210 30213 INFO None odoo.modules.loading: loading base/views/ir_cron_trigger_views.xml 
+2026-03-23 09:15:20,251 30213 INFO None odoo.modules.loading: loading base/views/ir_filters_views.xml 
+2026-03-23 09:15:20,280 30213 INFO None odoo.modules.loading: loading base/views/ir_mail_server_views.xml 
+2026-03-23 09:15:20,313 30213 INFO None odoo.modules.loading: loading base/views/ir_model_views.xml 
+2026-03-23 09:15:20,556 30213 INFO None odoo.modules.loading: loading base/views/ir_attachment_views.xml 
+2026-03-23 09:15:20,592 30213 INFO None odoo.modules.loading: loading base/views/ir_rule_views.xml 
+2026-03-23 09:15:20,637 30213 INFO None odoo.modules.loading: loading base/views/ir_sequence_views.xml 
+2026-03-23 09:15:20,672 30213 INFO None odoo.modules.loading: loading base/views/ir_ui_menu_views.xml 
+2026-03-23 09:15:20,704 30213 INFO None odoo.modules.loading: loading base/views/ir_ui_view_views.xml 
+2026-03-23 09:15:20,800 30213 INFO None odoo.modules.loading: loading base/views/ir_default_views.xml 
+2026-03-23 09:15:20,836 30213 INFO None odoo.modules.loading: loading base/data/ir_cron_data.xml 
+2026-03-23 09:15:20,854 30213 INFO None odoo.modules.loading: loading base/report/ir_model_report.xml 
+2026-03-23 09:15:20,862 30213 INFO None odoo.modules.loading: loading base/report/ir_model_templates.xml 
+2026-03-23 09:15:20,886 30213 INFO None odoo.modules.loading: loading base/views/ir_logging_views.xml 
+2026-03-23 09:15:20,923 30213 INFO None odoo.modules.loading: loading base/views/ir_qweb_widget_templates.xml 
+2026-03-23 09:15:20,951 30213 INFO None odoo.modules.loading: loading base/views/ir_module_views.xml 
+2026-03-23 09:15:21,043 30213 INFO None odoo.modules.loading: loading base/data/ir_module_category_data.xml 
+2026-03-23 09:15:21,168 30213 INFO None odoo.modules.loading: loading base/data/ir_module_module.xml 
+2026-03-23 09:15:21,273 30213 INFO None odoo.modules.loading: loading base/report/ir_module_reports.xml 
+2026-03-23 09:15:21,280 30213 INFO None odoo.modules.loading: loading base/report/ir_module_report_templates.xml 
+2026-03-23 09:15:21,296 30213 INFO None odoo.modules.loading: loading base/wizard/base_module_update_views.xml 
+2026-03-23 09:15:21,314 30213 INFO None odoo.modules.loading: loading base/wizard/base_language_install_views.xml 
+2026-03-23 09:15:21,334 30213 INFO None odoo.modules.loading: loading base/wizard/base_import_language_views.xml 
+2026-03-23 09:15:21,360 30213 INFO None odoo.modules.loading: loading base/wizard/base_module_upgrade_views.xml 
+2026-03-23 09:15:21,397 30213 INFO None odoo.modules.loading: loading base/wizard/base_module_uninstall_views.xml 
+2026-03-23 09:15:21,408 30213 INFO None odoo.modules.loading: loading base/wizard/base_export_language_views.xml 
+2026-03-23 09:15:21,431 30213 INFO None odoo.modules.loading: loading base/wizard/base_partner_merge_views.xml 
+2026-03-23 09:15:21,457 30213 INFO None odoo.modules.loading: loading base/data/ir_demo_failure_data.xml 
+2026-03-23 09:15:21,484 30213 INFO None odoo.modules.loading: loading base/views/ir_profile_views.xml 
+2026-03-23 09:15:21,534 30213 INFO None odoo.modules.loading: loading base/views/res_company_views.xml 
+2026-03-23 09:15:21,577 30213 INFO None odoo.modules.loading: loading base/views/res_lang_views.xml 
+2026-03-23 09:15:21,622 30213 INFO None odoo.modules.loading: loading base/views/res_partner_views.xml 
+2026-03-23 09:15:21,843 30213 INFO None odoo.modules.loading: loading base/views/res_bank_views.xml 
+2026-03-23 09:15:21,902 30213 INFO None odoo.modules.loading: loading base/views/res_country_views.xml 
+2026-03-23 09:15:21,972 30213 INFO None odoo.modules.loading: loading base/views/res_currency_views.xml 
+2026-03-23 09:15:22,028 30213 INFO None odoo.modules.loading: loading base/views/res_users_views.xml 
+2026-03-23 09:15:22,216 30213 INFO None odoo.modules.loading: loading base/views/res_users_identitycheck_views.xml 
+2026-03-23 09:15:22,230 30213 INFO None odoo.modules.loading: loading base/views/ir_property_views.xml 
+2026-03-23 09:15:22,269 30213 INFO None odoo.modules.loading: loading base/views/res_config_settings_views.xml 
+2026-03-23 09:15:22,284 30213 INFO None odoo.modules.loading: loading base/views/report_paperformat_views.xml 
+2026-03-23 09:15:22,338 30213 INFO None odoo.modules.loading: loading base/security/ir.model.access.csv 
+2026-03-23 09:15:22,551 30213 INFO None odoo.addons.base.models.ir_module: module base: loading translation file /opt/odoo-17.0/odoo/odoo/addons/base/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:22,551 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/odoo/addons/base/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:23,303 30213 INFO None odoo.modules.loading: Module base loaded in 13.57s, 8158 queries (+8158 other) 
+2026-03-23 09:15:23,303 30213 INFO None odoo.modules.loading: 1 modules loaded in 13.57s, 8158 queries (+8158 extra) 
+2026-03-23 09:15:23,336 30213 INFO None odoo.addons.base.models.ir_module: module base: loading translation file /opt/odoo-17.0/odoo/odoo/addons/base/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:23,337 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/odoo/addons/base/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:24,173 30213 INFO None odoo.modules.loading: updating modules list 
+2026-03-23 09:15:24,174 30213 INFO None odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-03-23 09:15:25,477 30213 INFO None odoo.modules.loading: loading 11 modules... 
+2026-03-23 09:15:25,478 30213 INFO None odoo.modules.loading: Loading module web (2/11) 
+2026-03-23 09:15:25,502 30213 INFO None odoo.modules.registry: module web: creating or updating database tables 
+2026-03-23 09:15:26,197 30213 INFO None odoo.modules.loading: loading web/security/ir.model.access.csv 
+2026-03-23 09:15:26,214 30213 INFO None odoo.modules.loading: loading web/views/webclient_templates.xml 
+2026-03-23 09:15:26,403 30213 INFO None odoo.modules.loading: loading web/views/report_templates.xml 
+2026-03-23 09:15:26,573 30213 INFO None odoo.modules.loading: loading web/views/base_document_layout_views.xml 
+2026-03-23 09:15:26,588 30213 INFO None odoo.modules.loading: loading web/views/partner_view.xml 
+2026-03-23 09:15:26,596 30213 INFO None odoo.modules.loading: loading web/views/speedscope_template.xml 
+2026-03-23 09:15:26,606 30213 INFO None odoo.modules.loading: loading web/views/neutralize_views.xml 
+2026-03-23 09:15:26,616 30213 INFO None odoo.modules.loading: loading web/data/ir_attachment.xml 
+2026-03-23 09:15:26,624 30213 INFO None odoo.modules.loading: loading web/data/report_layout.xml 
+2026-03-23 09:15:26,646 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='company.id' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,646 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='font' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,647 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,647 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,647 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,648 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,649 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,649 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,649 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,649 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,650 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,650 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,650 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,650 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,651 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,651 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,651 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,651 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,652 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,652 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,652 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,652 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,653 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,653 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,653 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,654 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,654 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,654 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,654 30213 WARNING None odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 209. Replace by @t-out 
+2026-03-23 09:15:26,670 30213 INFO None odoo.addons.base.models.ir_module: module web: loading translation file /opt/odoo-17.0/odoo/addons/web/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:26,670 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/web/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:27,023 30213 INFO None odoo.modules.loading: Module web loaded in 1.54s, 1041 queries (+1041 other) 
+2026-03-23 09:15:27,023 30213 INFO None odoo.modules.loading: Loading module auth_totp (3/11) 
+2026-03-23 09:15:27,082 30213 INFO None odoo.modules.registry: module auth_totp: creating or updating database tables 
+2026-03-23 09:15:27,209 30213 INFO None odoo.modules.loading: loading auth_totp/security/security.xml 
+2026-03-23 09:15:27,256 30213 INFO None odoo.modules.loading: loading auth_totp/security/ir.model.access.csv 
+2026-03-23 09:15:27,271 30213 INFO None odoo.modules.loading: loading auth_totp/data/ir_action_data.xml 
+2026-03-23 09:15:27,283 30213 INFO None odoo.modules.loading: loading auth_totp/views/res_users_views.xml 
+2026-03-23 09:15:27,338 30213 INFO None odoo.modules.loading: loading auth_totp/views/templates.xml 
+2026-03-23 09:15:27,352 30213 INFO None odoo.modules.loading: loading auth_totp/wizard/auth_totp_wizard_views.xml 
+2026-03-23 09:15:27,369 30213 INFO None odoo.addons.base.models.ir_module: module auth_totp: loading translation file /opt/odoo-17.0/odoo/addons/auth_totp/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:27,369 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/auth_totp/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:27,404 30213 INFO None odoo.modules.loading: Module auth_totp loaded in 0.38s, 195 queries (+195 other) 
+2026-03-23 09:15:27,404 30213 INFO None odoo.modules.loading: Loading module base_import (4/11) 
+2026-03-23 09:15:27,449 30213 INFO None odoo.modules.registry: module base_import: creating or updating database tables 
+2026-03-23 09:15:28,214 30213 INFO None odoo.modules.loading: loading base_import/security/ir.model.access.csv 
+2026-03-23 09:15:28,235 30213 INFO None odoo.addons.base.models.ir_module: module base_import: loading translation file /opt/odoo-17.0/odoo/addons/base_import/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:28,236 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/base_import/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:28,267 30213 INFO None odoo.modules.loading: Module base_import loaded in 0.86s, 812 queries (+812 other) 
+2026-03-23 09:15:28,268 30213 INFO None odoo.modules.loading: Loading module base_import_module (5/11) 
+2026-03-23 09:15:28,311 30213 INFO None odoo.modules.registry: module base_import_module: creating or updating database tables 
+2026-03-23 09:15:28,431 30213 INFO None odoo.modules.loading: loading base_import_module/security/ir.model.access.csv 
+2026-03-23 09:15:28,447 30213 INFO None odoo.modules.loading: loading base_import_module/views/base_import_module_view.xml 
+2026-03-23 09:15:28,468 30213 INFO None odoo.modules.loading: loading base_import_module/views/ir_module_views.xml 
+2026-03-23 09:15:28,537 30213 INFO None odoo.addons.base.models.ir_module: module base_import_module: loading translation file /opt/odoo-17.0/odoo/addons/base_import_module/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:28,537 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/base_import_module/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:28,568 30213 INFO None odoo.modules.loading: Module base_import_module loaded in 0.30s, 173 queries (+173 other) 
+2026-03-23 09:15:28,569 30213 INFO None odoo.modules.loading: Loading module base_setup (6/11) 
+2026-03-23 09:15:28,685 30213 INFO None odoo.modules.registry: module base_setup: creating or updating database tables 
+2026-03-23 09:15:28,755 30213 INFO None odoo.modules.loading: loading base_setup/data/base_setup_data.xml 
+2026-03-23 09:15:28,763 30213 INFO None odoo.modules.loading: loading base_setup/views/res_config_settings_views.xml 
+2026-03-23 09:15:28,809 30213 INFO None odoo.modules.loading: loading base_setup/views/res_partner_views.xml 
+2026-03-23 09:15:28,833 30213 INFO None odoo.addons.base.models.ir_module: module base_setup: loading translation file /opt/odoo-17.0/odoo/addons/base_setup/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:28,833 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/base_setup/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:28,869 30213 INFO None odoo.modules.loading: Module base_setup loaded in 0.30s, 157 queries (+157 other) 
+2026-03-23 09:15:28,869 30213 INFO None odoo.modules.loading: Loading module bus (7/11) 
+2026-03-23 09:15:28,946 30213 INFO None odoo.modules.registry: module bus: creating or updating database tables 
+2026-03-23 09:15:29,096 30213 INFO None odoo.modules.loading: loading bus/security/ir.model.access.csv 
+2026-03-23 09:15:29,127 30213 INFO None odoo.addons.base.models.ir_module: module bus: loading translation file /opt/odoo-17.0/odoo/addons/bus/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:29,127 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/bus/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:29,178 30213 INFO None odoo.modules.loading: Module bus loaded in 0.31s, 120 queries (+120 other) 
+2026-03-23 09:15:29,178 30213 INFO None odoo.modules.loading: Loading module web_tour (8/11) 
+2026-03-23 09:15:29,201 30213 INFO None odoo.modules.registry: module web_tour: creating or updating database tables 
+2026-03-23 09:15:29,260 30213 INFO None odoo.modules.loading: loading web_tour/security/ir.model.access.csv 
+2026-03-23 09:15:29,275 30213 INFO None odoo.modules.loading: loading web_tour/security/ir.rule.csv 
+2026-03-23 09:15:29,287 30213 INFO None odoo.modules.loading: loading web_tour/views/tour_views.xml 
+2026-03-23 09:15:29,326 30213 INFO None odoo.addons.base.models.ir_module: module web_tour: loading translation file /opt/odoo-17.0/odoo/addons/web_tour/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:29,326 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/web_tour/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:29,354 30213 INFO None odoo.modules.loading: Module web_tour loaded in 0.18s, 114 queries (+114 other) 
+2026-03-23 09:15:29,354 30213 INFO None odoo.modules.loading: Loading module iap (9/11) 
+2026-03-23 09:15:29,400 30213 INFO None odoo.modules.registry: module iap: creating or updating database tables 
+2026-03-23 09:15:29,525 30213 INFO None odoo.modules.loading: loading iap/security/ir.model.access.csv 
+2026-03-23 09:15:29,543 30213 INFO None odoo.modules.loading: loading iap/security/ir_rule.xml 
+2026-03-23 09:15:29,555 30213 INFO None odoo.modules.loading: loading iap/views/iap_views.xml 
+2026-03-23 09:15:29,592 30213 INFO None odoo.modules.loading: loading iap/views/res_config_settings.xml 
+2026-03-23 09:15:29,627 30213 INFO None odoo.addons.base.models.ir_module: module iap: loading translation file /opt/odoo-17.0/odoo/addons/iap/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:29,627 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/iap/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:29,664 30213 INFO None odoo.modules.loading: Module iap loaded in 0.31s, 171 queries (+171 other) 
+2026-03-23 09:15:29,664 30213 INFO None odoo.modules.loading: Loading module web_editor (10/11) 
+2026-03-23 09:15:29,802 30213 INFO None odoo.modules.registry: module web_editor: creating or updating database tables 
+2026-03-23 09:15:30,611 30213 INFO None odoo.modules.loading: loading web_editor/security/ir.model.access.csv 
+2026-03-23 09:15:30,629 30213 INFO None odoo.modules.loading: loading web_editor/data/editor_assets.xml 
+2026-03-23 09:15:30,637 30213 INFO None odoo.modules.loading: loading web_editor/views/editor.xml 
+2026-03-23 09:15:30,663 30213 INFO None odoo.modules.loading: loading web_editor/views/snippets.xml 
+2026-03-23 09:15:30,747 30213 INFO None odoo.addons.base.models.ir_module: module web_editor: loading translation file /opt/odoo-17.0/odoo/addons/web_editor/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:30,747 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/web_editor/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:30,839 30213 INFO None odoo.modules.loading: Module web_editor loaded in 1.18s, 933 queries (+933 other) 
+2026-03-23 09:15:30,839 30213 INFO None odoo.modules.loading: Loading module web_unsplash (11/11) 
+2026-03-23 09:15:30,864 30213 INFO None odoo.modules.registry: module web_unsplash: creating or updating database tables 
+2026-03-23 09:15:30,933 30213 INFO None odoo.modules.loading: loading web_unsplash/views/res_config_settings_view.xml 
+2026-03-23 09:15:30,993 30213 INFO None odoo.addons.base.models.ir_module: module web_unsplash: loading translation file /opt/odoo-17.0/odoo/addons/web_unsplash/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:30,994 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/web_unsplash/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:31,017 30213 INFO None odoo.modules.loading: Module web_unsplash loaded in 0.18s, 110 queries (+110 other) 
+2026-03-23 09:15:31,017 30213 INFO None odoo.modules.loading: 11 modules loaded in 5.54s, 3826 queries (+3826 extra) 
+2026-03-23 09:15:31,488 30213 INFO None odoo.modules.loading: Modules loaded. 
+2026-03-23 09:15:31,497 30213 INFO None odoo.modules.registry: Registry loaded in 21.791s 
+2026-03-23 09:15:31,508 30213 INFO None odoo.addons.base.models.ir_module: module base: loading translation file /opt/odoo-17.0/odoo/odoo/addons/base/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:31,508 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/odoo/addons/base/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,052 30213 INFO None odoo.addons.base.models.ir_module: module web: loading translation file /opt/odoo-17.0/odoo/addons/web/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,053 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/web/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,296 30213 INFO None odoo.addons.base.models.ir_module: module auth_totp: loading translation file /opt/odoo-17.0/odoo/addons/auth_totp/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,296 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/auth_totp/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,302 30213 INFO None odoo.addons.base.models.ir_module: module base_import: loading translation file /opt/odoo-17.0/odoo/addons/base_import/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,302 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/base_import/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,400 30213 INFO None odoo.addons.base.models.ir_module: module base_import_module: loading translation file /opt/odoo-17.0/odoo/addons/base_import_module/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,400 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/base_import_module/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,404 30213 INFO None odoo.addons.base.models.ir_module: module base_setup: loading translation file /opt/odoo-17.0/odoo/addons/base_setup/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,405 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/base_setup/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,411 30213 INFO None odoo.addons.base.models.ir_module: module bus: loading translation file /opt/odoo-17.0/odoo/addons/bus/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,411 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/bus/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,413 30213 INFO None odoo.addons.base.models.ir_module: module iap: loading translation file /opt/odoo-17.0/odoo/addons/iap/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,413 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/iap/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,417 30213 INFO None odoo.addons.base.models.ir_module: module web_editor: loading translation file /opt/odoo-17.0/odoo/addons/web_editor/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,417 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/web_editor/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,448 30213 INFO None odoo.addons.base.models.ir_module: module web_tour: loading translation file /opt/odoo-17.0/odoo/addons/web_tour/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,448 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/web_tour/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,451 30213 INFO None odoo.addons.base.models.ir_module: module web_unsplash: loading translation file /opt/odoo-17.0/odoo/addons/web_unsplash/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:32,451 30213 INFO None odoo.tools.translate: loading base translation file /opt/odoo-17.0/odoo/addons/web_unsplash/i18n/uk.po for language uk_UA 
+2026-03-23 09:15:33,820 30213 INFO None odoo.addons.base.models.res_users: Login successful for db:o17-learn login:bohdanghoul@gmail.com from 127.0.0.1 
+2026-03-23 09:15:33,836 30213 INFO None werkzeug: 127.0.0.1 - - [23/Mar/2026 09:15:33] "POST /web/database/create HTTP/1.1" 303 - 18158 16.277 12.189
+2026-03-23 09:15:33,847 30213 INFO o17-learn odoo.addons.base.models.ir_http: Generating routing map for key None 
+2026-03-23 09:15:33,884 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:15:33] "GET /web HTTP/1.1" 303 - 10 0.007 0.034
+2026-03-23 09:15:33,943 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='error' in template 185. Replace by @t-out 
+2026-03-23 09:15:33,944 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='message' in template 185. Replace by @t-out 
+2026-03-23 09:15:33,968 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc="title or 'Odoo'" in template 181. Replace by @t-out 
+2026-03-23 09:15:33,969 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='request.csrf_token(None)' in template 181. Replace by @t-out 
+2026-03-23 09:15:33,969 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='debug' in template 181. Replace by @t-out 
+2026-03-23 09:15:34,051 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:15:34] "GET /web/login HTTP/1.1" 200 - 63 0.038 0.120
+2026-03-23 09:15:34,145 30213 INFO o17-learn odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/c112d79/web.assets_frontend_minimal.min.js (id:14) 
+2026-03-23 09:15:34,152 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:15:34] "GET /web/assets/c112d79/web.assets_frontend_minimal.min.js HTTP/1.1" 200 - 16 0.017 0.045
+2026-03-23 09:15:35,111 30213 INFO o17-learn odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/08b855b/web.assets_frontend.min.css (id:15) 
+2026-03-23 09:15:35,122 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:15:35] "GET /web/assets/08b855b/web.assets_frontend.min.css HTTP/1.1" 200 - 22 0.025 1.008
+2026-03-23 09:15:35,136 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:15:35] "GET /web/binary/company_logo HTTP/1.1" 200 - 5 0.004 0.008
+2026-03-23 09:15:35,786 30213 INFO o17-learn odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/a685341/web.assets_frontend_lazy.min.js (id:16) 
+2026-03-23 09:15:35,790 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:15:35] "GET /web/assets/a685341/web.assets_frontend_lazy.min.js HTTP/1.1" 200 - 23 0.015 0.557
+2026-03-23 09:15:36,646 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:15:36] "GET /web/webclient/translations/1774257335929 HTTP/1.1" 200 - 8 0.005 0.709
+2026-03-23 09:16:02,049 30213 INFO o17-learn odoo.addons.base.models.ir_cron: Starting job `Base: Auto-vacuum internal data`. 
+2026-03-23 09:16:02,076 30213 INFO o17-learn odoo.addons.base.models.ir_attachment: filestore gc 13 checked, 0 removed 
+2026-03-23 09:16:02,129 30213 INFO o17-learn odoo.addons.base.models.res_users: GC'd 0 user log entries 
+2026-03-23 09:16:02,160 30213 INFO o17-learn odoo.addons.auth_totp.models.auth_totp: GC'd 0 totp devices entries 
+2026-03-23 09:16:02,177 30213 INFO o17-learn odoo.addons.base.models.ir_cron: Job done: `Base: Auto-vacuum internal data` (0.128s). 
+2026-03-23 09:16:02,190 30213 INFO o17-learn odoo.addons.base.models.ir_cron: Starting job `Base: Portal Users Deletion`. 
+2026-03-23 09:16:02,195 30213 INFO o17-learn odoo.addons.base.models.ir_cron: Job done: `Base: Portal Users Deletion` (0.005s). 
+2026-03-23 09:16:06,080 30213 INFO o17-learn odoo.addons.base.models.res_users: Login successful for db:o17-learn login:bohdanghoul@gmail.com from 127.0.0.1 
+2026-03-23 09:16:06,100 30213 INFO o17-learn odoo.modules.registry: Caches invalidated, signaling through the database: ['default'] 
+2026-03-23 09:16:06,101 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:06] "POST /web/login HTTP/1.1" 303 - 50 0.026 0.464
+2026-03-23 09:16:06,275 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc="title or 'Odoo'" in template 180. Replace by @t-out 
+2026-03-23 09:16:06,275 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='request.csrf_token(None)' in template 180. Replace by @t-out 
+2026-03-23 09:16:06,276 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='debug' in template 180. Replace by @t-out 
+2026-03-23 09:16:06,289 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:06] "GET /web HTTP/1.1" 200 - 91 0.050 0.131
+2026-03-23 09:16:08,299 30213 INFO o17-learn odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/f817bf4/web.assets_web.min.css (id:17) 
+2026-03-23 09:16:08,337 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:08] "GET /web/assets/f817bf4/web.assets_web.min.css HTTP/1.1" 200 - 26 0.189 1.807
+2026-03-23 09:16:09,559 30213 INFO o17-learn odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/19736ab/web.assets_web.min.js (id:18) 
+2026-03-23 09:16:09,582 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:09] "GET /web/assets/19736ab/web.assets_web.min.js HTTP/1.1" 200 - 22 0.022 3.215
+2026-03-23 09:16:09,615 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:09] "GET /web/webclient/load_menus/ebe30a325efadf28dfa112ef8824932adf17518ad61b88fd7cb10a30e216a3f1 HTTP/1.1" 200 - 2 0.004 0.011
+2026-03-23 09:16:09,628 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:09] "GET /web/webclient/translations/a4bacc02a74aeec0a1f034e1f127f079088f16fb?lang=uk_UA HTTP/1.1" 200 - 4 0.007 0.021
+2026-03-23 09:16:09,877 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:09] "GET /web/static/img/odoo-icon-ios.png HTTP/1.1" 200 - 0 0.000 0.004
+2026-03-23 09:16:09,918 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:09] "GET /web/service-worker.js HTTP/1.1" 200 - 1 0.001 0.005
+2026-03-23 09:16:09,991 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:09] "GET /web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2 HTTP/1.1" 200 - 0 0.000 0.007
+2026-03-23 09:16:10,003 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "POST /web/action/load HTTP/1.1" 200 - 9 0.022 0.020
+2026-03-23 09:16:10,054 30213 INFO o17-learn odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/d5e3832/bus.websocket_worker_assets.min.js (id:19) 
+2026-03-23 09:16:10,058 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /web/image?model=res.users&field=avatar_128&id=2 HTTP/1.1" 200 - 21 0.066 0.029
+2026-03-23 09:16:10,069 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /bus/websocket_worker_bundle?v=17.0-3 HTTP/1.1" 200 - 8 0.020 0.063
+2026-03-23 09:16:10,105 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /websocket?version=17.0-3 HTTP/1.1" 101 - 1 0.004 0.015
+2026-03-23 09:16:10,130 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc="title or 'Odoo'" in template 180. Replace by @t-out 
+2026-03-23 09:16:10,131 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='request.csrf_token(None)' in template 180. Replace by @t-out 
+2026-03-23 09:16:10,132 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='debug' in template 180. Replace by @t-out 
+2026-03-23 09:16:10,137 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /web/offline HTTP/1.1" 200 - 14 0.027 0.083
+2026-03-23 09:16:10,221 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "POST /web/dataset/call_kw/ir.module.module/get_views HTTP/1.1" 200 - 57 0.067 0.120
+2026-03-23 09:16:10,251 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "POST /web/dataset/call_kw/ir.module.module/search_panel_select_range HTTP/1.1" 200 - 1 0.001 0.011
+2026-03-23 09:16:10,324 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "POST /web/dataset/call_kw/ir.module.module/search_panel_select_range HTTP/1.1" 200 - 62 0.056 0.027
+2026-03-23 09:16:10,371 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "POST /web/dataset/call_kw/ir.module.module/web_search_read HTTP/1.1" 200 - 8 0.013 0.113
+2026-03-23 09:16:10,620 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /pos_restaurant/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.010
+2026-03-23 09:16:10,623 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /sale_management/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.013
+2026-03-23 09:16:10,623 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /crm/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.010
+2026-03-23 09:16:10,630 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /account/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.005
+2026-03-23 09:16:10,637 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/mrp_workorder.png HTTP/1.1" 200 - 0 0.000 0.005
+2026-03-23 09:16:10,647 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /stock/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.005
+2026-03-23 09:16:10,649 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /website/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.011
+2026-03-23 09:16:10,655 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/account_accountant.png HTTP/1.1" 200 - 0 0.000 0.005
+2026-03-23 09:16:10,668 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/knowledge.png HTTP/1.1" 200 - 0 0.000 0.005
+2026-03-23 09:16:10,683 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /purchase/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.008
+2026-03-23 09:16:10,686 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /point_of_sale/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.007
+2026-03-23 09:16:10,692 30213 INFO ? odoo.addons.bus.models.bus: Bus.loop listen imbus on db postgres 
+2026-03-23 09:16:10,694 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /project/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.006
+2026-03-23 09:16:10,702 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /website_sale/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.004
+2026-03-23 09:16:10,705 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /mrp/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.004
+2026-03-23 09:16:10,715 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /mass_mailing/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.002
+2026-03-23 09:16:10,718 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/timesheet_grid.png HTTP/1.1" 200 - 0 0.000 0.002
+2026-03-23 09:16:10,721 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /hr_expense/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.003
+2026-03-23 09:16:10,736 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /hr_holidays/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.010
+2026-03-23 09:16:10,752 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /hr_recruitment/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.017
+2026-03-23 09:16:10,756 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/web_studio.png HTTP/1.1" 200 - 0 0.000 0.031
+2026-03-23 09:16:10,761 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/industry_fsm.png HTTP/1.1" 200 - 0 0.000 0.019
+2026-03-23 09:16:10,765 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /data_recycle/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.012
+2026-03-23 09:16:10,770 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /hr/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.025
+2026-03-23 09:16:10,782 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/helpdesk.png HTTP/1.1" 200 - 0 0.000 0.002
+2026-03-23 09:16:10,786 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /maintenance/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.021
+2026-03-23 09:16:10,800 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/sale_subscription.png HTTP/1.1" 200 - 0 0.000 0.008
+2026-03-23 09:16:10,810 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/quality_control.png HTTP/1.1" 200 - 0 0.000 0.012
+2026-03-23 09:16:10,811 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/sign.png HTTP/1.1" 200 - 0 0.000 0.037
+2026-03-23 09:16:10,827 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /website_slides/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.024
+2026-03-23 09:16:10,837 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /mail/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.008
+2026-03-23 09:16:10,839 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /contacts/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.001
+2026-03-23 09:16:10,843 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/planning.png HTTP/1.1" 200 - 0 0.000 0.028
+2026-03-23 09:16:10,845 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /website_event/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.023
+2026-03-23 09:16:10,856 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/mrp_plm.png HTTP/1.1" 200 - 0 0.000 0.009
+2026-03-23 09:16:10,860 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/social.png HTTP/1.1" 200 - 0 0.000 0.003
+2026-03-23 09:16:10,872 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /calendar/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.021
+2026-03-23 09:16:10,893 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/hr_appraisal.png HTTP/1.1" 200 - 0 0.000 0.017
+2026-03-23 09:16:10,904 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /fleet/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.018
+2026-03-23 09:16:10,920 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/marketing_automation.png HTTP/1.1" 200 - 0 0.000 0.020
+2026-03-23 09:16:10,925 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /im_livechat/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.013
+2026-03-23 09:16:10,930 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/appointment.png HTTP/1.1" 200 - 0 0.000 0.004
+2026-03-23 09:16:10,937 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /repair/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.001
+2026-03-23 09:16:10,938 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /survey/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.007
+2026-03-23 09:16:10,943 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/web_mobile.png HTTP/1.1" 200 - 0 0.000 0.010
+2026-03-23 09:16:10,950 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /hr_attendance/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.009
+2026-03-23 09:16:10,966 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/stock_barcode.png HTTP/1.1" 200 - 0 0.000 0.019
+2026-03-23 09:16:10,970 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /mass_mailing_sms/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.026
+2026-03-23 09:16:10,973 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /hr_skills/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.005
+2026-03-23 09:16:10,974 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /project_todo/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.023
+2026-03-23 09:16:10,990 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /lunch/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.008
+2026-03-23 09:16:10,990 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /base/static/img/icons/voip.png HTTP/1.1" 200 - 0 0.000 0.011
+2026-03-23 09:16:10,996 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:10] "GET /website_hr_recruitment/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.004
+2026-03-23 09:16:11,003 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:11] "GET /hr_contract/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.001
+2026-03-23 09:16:11,004 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:11] "GET /base/static/img/icons/sale_amazon.png HTTP/1.1" 200 - 0 0.000 0.005
+2026-03-23 09:16:11,006 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:16:11] "GET /base/static/img/icons/sale_ebay.png HTTP/1.1" 200 - 0 0.000 0.001
+2026-03-23 09:17:02,254 30213 INFO o17-learn odoo.addons.base.models.ir_cron: Starting job `Base: Auto-vacuum internal data`. 
+2026-03-23 09:17:02,278 30213 INFO o17-learn odoo.addons.base.models.ir_attachment: filestore gc 3 checked, 0 removed 
+2026-03-23 09:17:02,324 30213 INFO o17-learn odoo.addons.base.models.res_users: GC'd 1 user log entries 
+2026-03-23 09:17:02,362 30213 INFO o17-learn odoo.addons.auth_totp.models.auth_totp: GC'd 0 totp devices entries 
+2026-03-23 09:17:02,379 30213 INFO o17-learn odoo.addons.base.models.ir_cron: Job done: `Base: Auto-vacuum internal data` (0.124s). 
+2026-03-23 09:17:30,045 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:17:30] "GET /web/database/selector HTTP/1.1" 200 - 8 0.009 0.490
+2026-03-23 09:17:30,139 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:17:30] "GET /web/static/src/libs/fontawesome/css/font-awesome.css HTTP/1.1" 200 - 1 0.002 0.072
+2026-03-23 09:17:30,142 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:17:30] "GET /web/static/lib/bootstrap/dist/css/bootstrap.css HTTP/1.1" 200 - 1 0.003 0.074
+2026-03-23 09:17:30,146 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:17:30] "GET /web/static/lib/bootstrap/js/dist/dom/data.js HTTP/1.1" 200 - 1 0.002 0.076
+2026-03-23 09:17:30,150 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:17:30] "GET /web/static/lib/bootstrap/js/dist/dom/manipulator.js HTTP/1.1" 200 - 1 0.010 0.071
+2026-03-23 09:17:30,156 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:17:30] "GET /web/static/lib/bootstrap/js/dist/dom/selector-engine.js HTTP/1.1" 200 - 1 0.003 0.083
+2026-03-23 09:17:30,163 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:17:30] "GET /web/static/lib/bootstrap/js/dist/dom/event-handler.js HTTP/1.1" 200 - 1 0.002 0.093
+2026-03-23 09:17:30,199 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:17:30] "GET /web/static/lib/bootstrap/js/dist/base-component.js HTTP/1.1" 200 - 1 0.002 0.045
+2026-03-23 09:17:30,202 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:17:30] "GET /web/static/lib/bootstrap/js/dist/modal.js HTTP/1.1" 200 - 1 0.002 0.042
+2026-03-23 09:17:30,206 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:17:30] "GET /web/static/src/public/database_manager.js HTTP/1.1" 200 - 1 0.003 0.042
+2026-03-23 09:17:30,224 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 09:17:30] "GET /web/static/img/logo2.png HTTP/1.1" 200 - 1 0.002 0.013
+2026-03-23 09:57:00,470 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc="title or 'Odoo'" in template 180. Replace by @t-out 
+2026-03-23 09:57:00,471 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='request.csrf_token(None)' in template 180. Replace by @t-out 
+2026-03-23 09:57:00,472 30213 WARNING o17-learn odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='debug' in template 180. Replace by @t-out 
+2026-03-23 09:57:00,478 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:57:00] "GET /web HTTP/1.1" 200 - 43 0.035 0.103
+2026-03-23 09:57:00,971 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:57:00] "POST /web/action/load HTTP/1.1" 200 - 9 0.007 0.014
+2026-03-23 09:57:01,052 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:57:01] "GET /web/image?model=res.users&field=avatar_128&id=2 HTTP/1.1" 304 - 21 0.020 0.043
+2026-03-23 09:57:01,052 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:57:01] "GET /bus/websocket_worker_bundle?v=17.0-3 HTTP/1.1" 304 - 4 0.016 0.029
+2026-03-23 09:57:01,082 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:57:01] "GET /websocket?version=17.0-3 HTTP/1.1" 101 - 1 0.001 0.010
+2026-03-23 09:57:01,123 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:57:01] "POST /web/dataset/call_kw/ir.module.module/get_views HTTP/1.1" 200 - 30 0.024 0.064
+2026-03-23 09:57:01,150 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:57:01] "POST /web/dataset/call_kw/ir.module.module/search_panel_select_range HTTP/1.1" 200 - 1 0.001 0.005
+2026-03-23 09:57:01,199 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:57:01] "POST /web/dataset/call_kw/ir.module.module/web_search_read HTTP/1.1" 200 - 8 0.012 0.035
+2026-03-23 09:57:01,232 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:57:01] "POST /web/dataset/call_kw/ir.module.module/search_panel_select_range HTTP/1.1" 200 - 60 0.055 0.025
+2026-03-23 09:57:01,597 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 09:57:01] "GET /web/service-worker.js HTTP/1.1" 200 - 1 0.002 0.009
+2026-03-23 10:00:09,442 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:00:09] "POST /web/dataset/call_kw/ir.module.module/web_search_read HTTP/1.1" 200 - 11 0.014 0.045
+2026-03-23 10:00:09,466 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:00:09] "POST /web/dataset/call_kw/ir.module.module/search_panel_select_range HTTP/1.1" 200 - 60 0.064 0.022
+2026-03-23 10:00:09,616 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 10:00:09] "GET /base/static/description/icon.png HTTP/1.1" 200 - 0 0.000 0.002
+2026-03-23 10:00:47,136 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:00:47] "POST /web/dataset/call_kw/ir.module.module/search_panel_select_range HTTP/1.1" 200 - 80 0.053 0.026
+2026-03-23 10:00:47,182 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:00:47] "POST /web/dataset/call_kw/ir.module.module/web_search_read HTTP/1.1" 200 - 10 0.012 0.022
+2026-03-23 10:00:47,350 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 10:00:47] "GET /account/static/description/l10n.png HTTP/1.1" 200 - 0 0.000 0.001
+2026-03-23 10:00:59,933 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:00:59] "POST /web/dataset/call_kw/ir.module.module/web_search_read HTTP/1.1" 200 - 11 0.013 0.046
+2026-03-23 10:00:59,967 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:00:59] "POST /web/dataset/call_kw/ir.module.module/search_panel_select_range HTTP/1.1" 200 - 60 0.073 0.024
+2026-03-23 10:01:26,416 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:01:26] "POST /web/dataset/call_kw/ir.module.module/web_search_read HTTP/1.1" 200 - 10 0.012 0.012
+2026-03-23 10:01:26,455 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:01:26] "POST /web/dataset/call_kw/ir.module.module/search_panel_select_range HTTP/1.1" 200 - 60 0.042 0.023
+2026-03-23 10:01:31,357 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:01:31] "POST /web/action/load HTTP/1.1" 200 - 8 0.006 0.008
+2026-03-23 10:01:31,417 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:01:31] "POST /web/dataset/call_kw/res.config.settings/get_views HTTP/1.1" 200 - 16 0.014 0.030
+2026-03-23 10:01:31,477 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:01:31] "POST /web/dataset/call_kw/res.config.settings/onchange HTTP/1.1" 200 - 28 0.019 0.019
+2026-03-23 10:01:31,535 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:01:31] "POST /base_setup/demo_active HTTP/1.1" 200 - 4 0.005 0.005
+2026-03-23 10:01:31,545 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:01:31] "POST /base_setup/data HTTP/1.1" 200 - 6 0.004 0.004
+2026-03-23 10:01:31,593 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 10:01:31] "GET /base/static/description/settings.png HTTP/1.1" 200 - 0 0.000 0.001
+2026-03-23 10:01:31,625 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 10:01:31] "GET /base_setup/static/src/img/app_store.png HTTP/1.1" 200 - 0 0.000 0.005
+2026-03-23 10:01:31,626 30213 INFO ? werkzeug: 127.0.0.1 - - [23/Mar/2026 10:01:31] "GET /base_setup/static/src/img/google_play.png HTTP/1.1" 200 - 0 0.000 0.007
+2026-03-23 10:02:49,773 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:02:49] "POST /web/dataset/call_kw/res.config.settings/onchange HTTP/1.1" 200 - 16 0.011 0.012
+2026-03-23 10:02:51,772 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:02:51] "POST /web/dataset/call_kw/ir.module.module/search_panel_select_range HTTP/1.1" 200 - 1 0.002 0.010
+2026-03-23 10:02:51,817 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:02:51] "POST /web/dataset/call_kw/ir.module.module/web_search_read HTTP/1.1" 200 - 8 0.008 0.046
+2026-03-23 10:02:51,846 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:02:51] "POST /web/dataset/call_kw/ir.module.module/search_panel_select_range HTTP/1.1" 200 - 60 0.061 0.023
+2026-03-23 10:02:54,144 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:02:54] "POST /web/dataset/call_kw/ir.module.module/web_search_read HTTP/1.1" 200 - 11 0.019 0.051
+2026-03-23 10:02:54,164 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 10:02:54] "POST /web/dataset/call_kw/ir.module.module/search_panel_select_range HTTP/1.1" 200 - 60 0.069 0.025
+2026-03-23 11:19:14,935 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 11:19:14] "GET /websocket?version=17.0-3 HTTP/1.1" 101 - 1 0.001 0.007
+2026-03-23 12:37:07,902 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 12:37:07] "GET /websocket?version=17.0-3 HTTP/1.1" 101 - 1 0.001 0.005
+2026-03-23 14:06:15,783 30213 INFO o17-learn werkzeug: 127.0.0.1 - - [23/Mar/2026 14:06:15] "GET /websocket?version=17.0-3 HTTP/1.1" 101 - 1 0.001 0.005
+2026-03-23 14:28:42,161 30213 ERROR ? odoo.addons.bus.models.bus: Bus.loop error, sleep and retry 
+Traceback (most recent call last):
+  File "/opt/odoo-17.0/odoo/addons/bus/models/bus.py", line 256, in run
+    self.loop()
+  File "/opt/odoo-17.0/odoo/addons/bus/models/bus.py", line 241, in loop
+    conn.poll()
+psycopg2.OperationalError: SSL connection has been closed unexpectedly
+
+2026-03-23 14:28:42,271 30213 INFO o17-learn odoo.sql_db: Connection to the database failed 
+2026-03-23 14:28:42,271 30213 WARNING o17-learn odoo.addons.base.models.ir_cron: Exception in cron: 
+Traceback (most recent call last):
+  File "/opt/odoo-17.0/odoo/odoo/addons/base/models/ir_cron.py", line 119, in _process_jobs
+    with db.cursor() as cron_cr:
+  File "/opt/odoo-17.0/odoo/odoo/sql_db.py", line 773, in cursor
+    return Cursor(self.__pool, self.__dbname, self.__dsn)
+  File "/opt/odoo-17.0/odoo/odoo/sql_db.py", line 267, in __init__
+    self._cnx = pool.borrow(dsn)
+  File "<decorator-gen-13>", line 2, in borrow
+  File "/opt/odoo-17.0/odoo/odoo/tools/func.py", line 87, in locked
+    return func(inst, *args, **kwargs)
+  File "/opt/odoo-17.0/odoo/odoo/sql_db.py", line 701, in borrow
+    result = psycopg2.connect(
+  File "/opt/odoo-17.0/venv/lib/python3.10/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 failed: FATAL:  the database system is shutting down
+
+2026-03-23 14:28:42,304 30213 INFO o17-learn odoo.sql_db: Connection to the database failed 
+2026-03-23 14:28:42,304 30213 WARNING o17-learn odoo.addons.base.models.ir_cron: Exception in cron: 
+Traceback (most recent call last):
+  File "/opt/odoo-17.0/odoo/odoo/addons/base/models/ir_cron.py", line 119, in _process_jobs
+    with db.cursor() as cron_cr:
+  File "/opt/odoo-17.0/odoo/odoo/sql_db.py", line 773, in cursor
+    return Cursor(self.__pool, self.__dbname, self.__dsn)
+  File "/opt/odoo-17.0/odoo/odoo/sql_db.py", line 267, in __init__
+    self._cnx = pool.borrow(dsn)
+  File "<decorator-gen-13>", line 2, in borrow
+  File "/opt/odoo-17.0/odoo/odoo/tools/func.py", line 87, in locked
+    return func(inst, *args, **kwargs)
+  File "/opt/odoo-17.0/odoo/odoo/sql_db.py", line 701, in borrow
+    result = psycopg2.connect(
+  File "/opt/odoo-17.0/venv/lib/python3.10/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 failed: FATAL:  the database system is shutting down
+
+2026-03-23 14:28:43,610 30213 INFO o17-learn odoo.sql_db: Connection to the database failed 
+2026-03-23 14:28:43,691 30213 ERROR o17-learn werkzeug: Error on request:
+Traceback (most recent call last):
+  File "/opt/odoo-17.0/odoo/addons/bus/websocket.py", line 325, in get_messages
+    message = self._process_next_message()
+  File "/opt/odoo-17.0/odoo/addons/bus/websocket.py", line 471, in _process_next_message
+    frame = self._get_next_frame()
+  File "/opt/odoo-17.0/odoo/addons/bus/websocket.py", line 432, in _get_next_frame
+    first_byte, second_byte = recv_bytes(2)
+  File "/opt/odoo-17.0/odoo/addons/bus/websocket.py", line 411, in recv_bytes
+    raise ConnectionClosed()
+odoo.addons.bus.websocket.ConnectionClosed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/odoo-17.0/venv/lib/python3.10/site-packages/werkzeug/serving.py", line 319, in run_wsgi
+    execute(self.server.app)
+  File "/opt/odoo-17.0/venv/lib/python3.10/site-packages/werkzeug/serving.py", line 316, in execute
+    application_iter.close()  # type: ignore
+  File "/opt/odoo-17.0/venv/lib/python3.10/site-packages/werkzeug/wsgi.py", line 466, in close
+    callback()
+  File "/opt/odoo-17.0/venv/lib/python3.10/site-packages/werkzeug/wrappers/response.py", line 439, in close
+    func()
+  File "/opt/odoo-17.0/odoo/addons/bus/websocket.py", line 921, in <lambda>
+    response.call_on_close(lambda: cls._serve_forever(
+  File "/opt/odoo-17.0/odoo/addons/bus/websocket.py", line 1027, in _serve_forever
+    for message in websocket.get_messages():
+  File "/opt/odoo-17.0/odoo/addons/bus/websocket.py", line 329, in get_messages
+    self._handle_transport_error(exc)
+  File "/opt/odoo-17.0/odoo/addons/bus/websocket.py", line 647, in _handle_transport_error
+    self.disconnect(code, reason)
+  File "/opt/odoo-17.0/odoo/addons/bus/websocket.py", line 343, in disconnect
+    self._terminate()
+  File "/opt/odoo-17.0/odoo/addons/bus/websocket.py", line 597, in _terminate
+    with acquire_cursor(self._db) as cr:
+  File "/opt/odoo-17.0/python/lib/python3.10/contextlib.py", line 135, in __enter__
+    return next(self.gen)
+  File "/opt/odoo-17.0/odoo/addons/bus/websocket.py", line 52, in acquire_cursor
+    with suppress(PoolError), odoo.registry(db).cursor() as cr:
+  File "/opt/odoo-17.0/odoo/odoo/modules/registry.py", line 946, in cursor
+    return self._db.cursor()
+  File "/opt/odoo-17.0/odoo/odoo/sql_db.py", line 773, in cursor
+    return Cursor(self.__pool, self.__dbname, self.__dsn)
+  File "/opt/odoo-17.0/odoo/odoo/sql_db.py", line 267, in __init__
+    self._cnx = pool.borrow(dsn)
+  File "<decorator-gen-13>", line 2, in borrow
+    
+  File "/opt/odoo-17.0/odoo/odoo/tools/func.py", line 87, in locked
+    return func(inst, *args, **kwargs)
+  File "/opt/odoo-17.0/odoo/odoo/sql_db.py", line 701, in borrow
+    result = psycopg2.connect(
+  File "/opt/odoo-17.0/venv/lib/python3.10/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections? - - -
