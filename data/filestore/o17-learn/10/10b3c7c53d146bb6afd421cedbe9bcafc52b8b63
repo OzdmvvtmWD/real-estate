@@ -785,6 +785,30 @@
 /* /account/static/src/components/tax_totals/tax_totals.css */
 .o_tax_group{width: 0%}.o_tax_group_edit{white-space: nowrap;}.o_tax_group_edit:hover{color: #00A09D; cursor: pointer;}.o_tax_group_editable .o_tax_group_amount_value input{width: 65%; float: right; text-align: right;}.o_tax_group_editable .o_tax_group_amount_value::before{content: ' ';}.o_tax_total_label{margin-bottom: 0 !important;}
 
+/* /sales_team/static/src/scss/crm_team_views.scss */
+ .o_crm_team_kanban .o_kanban_renderer{--KanbanRecord-width: 400px;}.o_crm_team_member_kanban .o_kanban_renderer{--KanbanRecord-width: 350px;}.o_crm_team_member_kanban .o_kanban_renderer .o_kanban_group:not(.o_column_folded){min-height: 100px;}.o_crm_team_member_kanban .o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost){min-height: 100px;}.o_crm_team_member_kanban .o_kanban_renderer .ribbon{--Ribbon-wrapper-width: 6rem;}
+
+/* /calendar/static/src/scss/calendar.scss */
+ .o_cw_popover .o_cw_popover_fields_secondary{max-height: 75vh;}.o_cw_popover .o_cw_popover_fields_secondary > li > div{min-width: 0;}.o_cw_body .o_field_copy{max-width: calc(100% - 6rem); width: unset !important;}.o_cw_body .o_clipboard_button{padding-top: 0px !important;}.o_field_many2manyattendeeexpandable .o_field_tags{-webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; flex-direction: column;}.o_field_many2manyattendeeexpandable .o_field_tags span.badge{width: fit-content;}.o_calendar_renderer .fc-event.o_attendee_status_active:not(.o_event_dot){--o-bg-opacity: 1;}.o_calendar_renderer .fc-event.o_attendee_status_tentative:not(.o_event_dot){--o-bg-opacity: .5;}.o_calendar_renderer .fc-event.o_attendee_status_alone:not(.o_event_dot), .o_calendar_renderer .fc-event.o_attendee_status_needsAction:not(.o_event_dot){--o-bg-opacity: .5;}.o_calendar_renderer .fc-event.o_attendee_status_declined:not(.o_event_dot){--o-bg-opacity: 0;}.o_calendar_renderer .fc-event.o_event_dot.o_attendee_status_needsAction:before{content: "\f1db";}.o_calendar_renderer .fc-event.o_event_dot.o_attendee_status_tentative:before{content: "\f059";}.o_calendar_renderer .fc-event.o_event_dot.o_attendee_status_declined:before{content: "\f05e";}.o_calendar_renderer .fc-event.o_event_dot.o_attendee_status_alone{content: "\f06a";}.o_calendar_renderer .fc-event.o_attendee_status_declined .fc-content, .o_calendar_renderer .fc-event.o_event_striked .fc-content{text-decoration: line-through;}
+
+/* /calendar/static/src/views/fields/attendee_tags_list.scss */
+ .o_attendee_tags_list{--Avatar-size: 24px; position: relative;}.o_attendee_tags_list .attendee_tag_status{position: absolute; top: auto; left: auto; bottom: -0.375em; right: -0.375em; aspect-ratio: 1; border: 1px white solid;}.o_attendee_tags_list .o_attendee_status_accepted{background-color: #d4edda; color: #28a745;}.o_attendee_tags_list .o_attendee_status_declined{background-color: #f8d7da; color: #dc3545;}.o_attendee_tags_list .o_attendee_status_tentative{background-color: #e9ecef; color: #212529;}
+
+/* /calendar/static/src/views/widgets/calendar_week_days.scss */
+ .o_calendar_week_days_rounded{border-radius: 50%; margin-right: 8px; width: 24px; height: 24px; justify-content: center; display: -webkit-box; display: -webkit-flex; display: flex; cursor: pointer; align-items: center;}
+
+/* /utm/static/src/scss/utm_views.scss */
+ .o_utm_kanban .o_kanban_renderer{--KanbanRecord-width: 364px; --KanbanGroup-padding-h: 8px; --KanbanGroup-padding-bottom: 32px;}.o_utm_kanban .o_kanban_renderer #o_utm_actions > a{padding: var(--KanbanRecord-gap-inner-v) var(--KanbanRecord-padding-h); white-space: nowrap;}
+
+/* /crm/static/src/scss/crm.scss */
+ .o_lead_opportunity_form div.o_lead_opportunity_form_inline_fields > :not(.o_field_empty){margin-right: 1.5em;}.o_opportunity_kanban .o_kanban_renderer .oe_kanban_card_ribbon{min-height: 105px;}.o_opportunity_kanban .o_kanban_renderer .oe_kanban_card_ribbon .o_kanban_record_title{max-width: calc(100% - 65px);}.o_opportunity_kanban .o_kanban_renderer .oe_kanban_card_ribbon .o_kanban_record_subtitle{max-width: calc(100% - 35px);}.crm_lead_merge_summary blockquote{font-style: normal;}.crm_lead_merge_summary .o_tag_color_0{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_0{color: black; background-color: white; box-shadow: inset 0 0 0 1px #a2a2a2;}a.crm_lead_merge_summary .o_tag_color_0:hover{color: #000000; background-color: #e6e6e6;}.crm_lead_merge_summary .o_tag_color_1{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_1{color: white; background-color: #ee2d2d;}a.crm_lead_merge_summary .o_tag_color_1:hover{color: #FFFFFF; background-color: #d71111;}.crm_lead_merge_summary .o_tag_color_2{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_2{color: white; background-color: #dc8534;}a.crm_lead_merge_summary .o_tag_color_2:hover{color: #000000; background-color: #bd6c21;}.crm_lead_merge_summary .o_tag_color_3{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_3{color: white; background-color: #e8bb1d;}a.crm_lead_merge_summary .o_tag_color_3:hover{color: #000000; background-color: #bf9913;}.crm_lead_merge_summary .o_tag_color_4{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_4{color: white; background-color: #5794dd;}a.crm_lead_merge_summary .o_tag_color_4:hover{color: #FFFFFF; background-color: #2d79d4;}.crm_lead_merge_summary .o_tag_color_5{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_5{color: white; background-color: #9f628f;}a.crm_lead_merge_summary .o_tag_color_5:hover{color: #FFFFFF; background-color: #804e73;}.crm_lead_merge_summary .o_tag_color_6{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_6{color: white; background-color: #db8865;}a.crm_lead_merge_summary .o_tag_color_6:hover{color: #000000; background-color: #d1683c;}.crm_lead_merge_summary .o_tag_color_7{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_7{color: white; background-color: #41a9a2;}a.crm_lead_merge_summary .o_tag_color_7:hover{color: #000000; background-color: #33847f;}.crm_lead_merge_summary .o_tag_color_8{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_8{color: white; background-color: #304be0;}a.crm_lead_merge_summary .o_tag_color_8:hover{color: #FFFFFF; background-color: #1d36c0;}.crm_lead_merge_summary .o_tag_color_9{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_9{color: white; background-color: #ee2f8a;}a.crm_lead_merge_summary .o_tag_color_9:hover{color: #FFFFFF; background-color: #d81270;}.crm_lead_merge_summary .o_tag_color_10{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_10{color: white; background-color: #61c36e;}a.crm_lead_merge_summary .o_tag_color_10:hover{color: #000000; background-color: #42af51;}.crm_lead_merge_summary .o_tag_color_11{border: transparent; line-height: normal;}.crm_lead_merge_summary .o_tag_color_11{color: white; background-color: #9872e6;}a.crm_lead_merge_summary .o_tag_color_11:hover{color: #FFFFFF; background-color: #7847de;}
+
+/* /crm/static/src/scss/crm_team.scss */
+ .o_crm_team_form_view{}.o_crm_team_form_view div.o_crm_lead_all_assigned_month_exceeded + .o_crm_lead_month_assignment{color: #ffac00;}
+
+/* /crm/static/src/scss/crm_team_member_views.scss */
+ .o_crm_team_member_kanban .o_kanban_renderer .o_member_assignment div.oe_gauge{width: 100px; height: 80px;}
+
 /* /payment/static/src/scss/payment_provider.scss */
  .o_form_view .o_payment_provider_desc{margin-top: 10px;}.o_form_view .o_payment_provider_desc ul{list-style-type: none; padding: 0;}.o_form_view .o_payment_provider_desc ul i.fa{margin-right: 5px;}.o_form_view .o_payment_provider_desc ul i.fa.fa-check{color: green;}.o_form_view .o_warning_text{color: #f0ad4e;}
 
@@ -803,11 +827,11 @@
 /* /base_import/static/src/import_data_sidepanel/import_data_sidepanel.scss */
  .o_import_data_sidepanel{width: 280px;}
 
-/* /google_gmail/static/src/scss/google_gmail.scss */
- span.o_field_char[name="google_gmail_authorization_code"]{max-width: 150px !important; overflow: hidden;}
-
 /* /iap_mail/static/src/scss/iap_mail.scss */
  .o_partner_autocomplete_enrich_info i{min-width: fit-content;}
+
+/* /google_gmail/static/src/scss/google_gmail.scss */
+ span.o_field_char[name="google_gmail_authorization_code"]{max-width: 150px !important; overflow: hidden;}
 
 /* /mail_bot/static/src/scss/odoobot_style.scss */
  .o_odoobot_command{background-color: #e9ecef; border-radius: 4px; padding: 2px; padding-left: 10px; padding-right: 10px; font-weight: bold;}

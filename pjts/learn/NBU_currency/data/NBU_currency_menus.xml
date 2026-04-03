@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem id="nbu_menu_root" name="NBU currency">
+        <menuitem id="advertisement" name="NBU EUR" action="parse_nbu_eur_rate"/>
+    </menuitem>
+</odoo>

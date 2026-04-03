@@ -15494,6 +15494,285 @@ odoo.define('@account/views/res_company_onboarding_form_view',['@web/views/form/
 odoo.define('@account/js/search/search_bar/search_bar',['@web/core/l10n/translation','@web/core/utils/patch','@web/search/search_bar/search_bar'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{patch}=require("@web/core/utils/patch");const{SearchBar}=require("@web/search/search_bar/search_bar");patch(SearchBar.prototype,{getPreposition(searchItem){let preposition=super.getPreposition(searchItem);if(this.fields[searchItem.fieldName].name=='payment_date'){preposition=_t("until");}
 return preposition}});return __exports;});;
 
+/* /calendar/static/src/activity/activity_list_popover_item_patch.js */
+odoo.define('@calendar/activity/activity_list_popover_item_patch',['@mail/core/web/activity_list_popover_item','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{ActivityListPopoverItem}=require("@mail/core/web/activity_list_popover_item");const{patch}=require("@web/core/utils/patch");patch(ActivityListPopoverItem.prototype,{get hasEditButton(){return super.hasEditButton&&!this.props.activity.calendar_event_id;},async onClickReschedule(){await this.env.services["mail.activity"].rescheduleMeeting(this.props.activity.id);},});return __exports;});;
+
+/* /calendar/static/src/activity/activity_menu_patch.js */
+odoo.define('@calendar/activity/activity_menu_patch',['@mail/core/web/activity_menu','@web/core/utils/patch','@web/core/l10n/dates','@web/core/l10n/localization'],function(require){'use strict';let __exports={};const{ActivityMenu}=require("@mail/core/web/activity_menu");const{patch}=require("@web/core/utils/patch");const{deserializeDateTime,formatDateTime}=require("@web/core/l10n/dates");const{localization}=require("@web/core/l10n/localization");patch(ActivityMenu.prototype,{async fetchSystrayActivities(){await super.fetchSystrayActivities();for(const group of Object.values(this.store.activityGroups)){if(group.type==="meeting"){for(const meeting of group.meetings){if(meeting.start){const date=deserializeDateTime(meeting.start);meeting.formattedStart=formatDateTime(date,{format:localization.timeFormat});}}}}},openActivityGroup(group){if(group.model==="calendar.event"){document.body.click();this.action.doAction("calendar.action_calendar_event",{additionalContext:{default_mode:"day",search_default_mymeetings:1,},clearBreadcrumbs:true,});}else{super.openActivityGroup(...arguments);}},});return __exports;});;
+
+/* /calendar/static/src/activity/activity_model_patch.js */
+odoo.define('@calendar/activity/activity_model_patch',['@mail/core/web/activity_model','@mail/utils/common/misc','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{Activity}=require("@mail/core/web/activity_model");const{assignIn}=require("@mail/utils/common/misc");const{patch}=require("@web/core/utils/patch");patch(Activity,{_insert(data){const activity=super._insert(...arguments);assignIn(activity,data,["calendar_event_id"]);return activity;},});return __exports;});;
+
+/* /calendar/static/src/activity/activity_patch.js */
+odoo.define('@calendar/activity/activity_patch',['@mail/core/web/activity','@web/core/utils/hooks','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{Activity}=require("@mail/core/web/activity");const{useService}=require("@web/core/utils/hooks");const{patch}=require("@web/core/utils/patch");patch(Activity.prototype,{setup(){super.setup();this.orm=useService("orm");},async onClickReschedule(){await this.env.services["mail.activity"].rescheduleMeeting(this.props.data.id);},async unlink(){if(this.props.data.calendar_event_id){const thread=this.thread;this.activityService.delete(this.props.data);await this.orm.call("mail.activity","unlink_w_meeting",[[this.props.data.id]]);this.props.onUpdate(thread);}else{super.unlink();}},});return __exports;});;
+
+/* /calendar/static/src/activity/activity_service_patch.js */
+odoo.define('@calendar/activity/activity_service_patch',['@mail/core/web/activity_service','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{ActivityService}=require("@mail/core/web/activity_service");const{patch}=require("@web/core/utils/patch");patch(ActivityService.prototype,{async rescheduleMeeting(activityId){const action=await this.orm.call("mail.activity","action_create_calendar_event",[[activityId],]);this.env.services.action.doAction(action);},});return __exports;});;
+
+/* /calendar/static/src/components/calendar_provider_config/calendar_connect_provider.js */
+odoo.define('@calendar/components/calendar_provider_config/calendar_connect_provider',['@web/core/registry','@web/session','@web/views/widgets/standard_widget_props','@web/core/utils/hooks','@odoo/owl'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{session}=require("@web/session");const{standardWidgetProps}=require("@web/views/widgets/standard_widget_props");const{useService}=require("@web/core/utils/hooks");const{Component}=require("@odoo/owl");const providerData={google:{restart_sync_method:"restart_google_synchronization",sync_route:"/google_calendar/sync_data",},microsoft:{restart_sync_method:"restart_microsoft_synchronization",sync_route:"/microsoft_calendar/sync_data",},};const CalendarConnectProvider=__exports.CalendarConnectProvider=class CalendarConnectProvider extends Component{setup(){super.setup();this.orm=useService("orm");this.rpc=useService("rpc");}
+async onConnect(ev){ev.preventDefault();ev.stopImmediatePropagation();if(!(await this.props.record.save())){return;}
+await this.orm.call(this.props.record.resModel,"action_calendar_prepare_external_provider_sync",[this.props.record.resId]);const{restart_sync_method,sync_route}=providerData[this.props.record.data.external_calendar_provider];await this.orm.call("res.users",restart_sync_method,[[session.uid]]);const response=await this.rpc(sync_route,{model:"calendar.event",fromurl:window.location.href,});await this._beforeLeaveContext();if(response.status==="need_auth"){window.location.assign(response.url);}else if(response.status==="need_refresh"){window.location.reload();}}
+async _beforeLeaveContext(){return Promise.resolve();}}
+CalendarConnectProvider.props={...standardWidgetProps,};CalendarConnectProvider.template="calendar.CalendarConnectProvider";const calendarConnectProvider={component:CalendarConnectProvider,};registry.category("view_widgets").add("calendar_connect_provider",calendarConnectProvider);return __exports;});;
+
+/* /calendar/static/src/js/services/calendar_notification_service.js */
+odoo.define('@calendar/js/services/calendar_notification_service',['@web/core/l10n/translation','@web/core/browser/browser','@web/core/network/rpc_service','@web/core/registry'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{browser}=require("@web/core/browser/browser");const{ConnectionLostError}=require("@web/core/network/rpc_service");const{registry}=require("@web/core/registry");const calendarNotificationService=__exports.calendarNotificationService={dependencies:["action","bus_service","notification","rpc"],start(env,{action,bus_service,notification,rpc}){let calendarNotifTimeouts={};let nextCalendarNotifTimeout=null;const displayedNotifications=new Set();bus_service.subscribe("calendar.alarm",(payload)=>{displayCalendarNotification(payload);});bus_service.start();function displayCalendarNotification(notifications){let lastNotifTimer=0;browser.clearTimeout(nextCalendarNotifTimeout);Object.values(calendarNotifTimeouts).forEach((notif)=>browser.clearTimeout(notif));calendarNotifTimeouts={};notifications.forEach(function(notif){const key=notif.event_id+","+notif.alarm_id;if(displayedNotifications.has(key)){return;}
+calendarNotifTimeouts[key]=browser.setTimeout(function(){const notificationRemove=notification.add(notif.message,{title:notif.title,type:"warning",sticky:true,onClose:()=>{displayedNotifications.delete(key);},buttons:[{name:_t("OK"),primary:true,onClick:async()=>{await rpc("/calendar/notify_ack");notificationRemove();},},{name:_t("Details"),onClick:async()=>{await action.doAction({type:'ir.actions.act_window',res_model:'calendar.event',res_id:notif.event_id,views:[[false,'form']],});notificationRemove();},},{name:_t("Snooze"),onClick:()=>{notificationRemove();},},],});displayedNotifications.add(key);},notif.timer*1000);lastNotifTimer=Math.max(lastNotifTimer,notif.timer);});if(lastNotifTimer>0){nextCalendarNotifTimeout=browser.setTimeout(getNextCalendarNotif,lastNotifTimer*1000);}}
+async function getNextCalendarNotif(){try{const result=await rpc("/calendar/notify",{},{silent:true});displayCalendarNotification(result);}catch(error){if(!(error instanceof ConnectionLostError)){throw error;}}}},};registry.category("services").add("calendarNotification",calendarNotificationService);return __exports;});;
+
+/* /calendar/static/src/views/ask_recurrence_update_policy_dialog.js */
+odoo.define('@calendar/views/ask_recurrence_update_policy_dialog',['@web/core/l10n/translation','@web/core/dialog/dialog','@odoo/owl'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{Dialog}=require("@web/core/dialog/dialog");const{Component}=require("@odoo/owl");const AskRecurrenceUpdatePolicyDialog=__exports.AskRecurrenceUpdatePolicyDialog=class AskRecurrenceUpdatePolicyDialog extends Component{setup(){this.possibleValues={self_only:{checked:true,label:_t("This event"),},future_events:{checked:false,label:_t("This and following events"),},all_events:{checked:false,label:_t("All events"),},};}
+get selected(){return Object.entries(this.possibleValues).find((state)=>state[1].checked)[0];}
+set selected(val){this.possibleValues[this.selected].checked=false;this.possibleValues[val].checked=true;}
+confirm(){this.props.confirm(this.selected);this.props.close();}}
+AskRecurrenceUpdatePolicyDialog.template="calendar.AskRecurrenceUpdatePolicyDialog";AskRecurrenceUpdatePolicyDialog.components={Dialog,};return __exports;});;
+
+/* /calendar/static/src/views/ask_recurrence_update_policy_hook.js */
+odoo.define('@calendar/views/ask_recurrence_update_policy_hook',['@web/core/utils/hooks','@calendar/views/ask_recurrence_update_policy_dialog'],function(require){'use strict';let __exports={};const{useService}=require("@web/core/utils/hooks");const{AskRecurrenceUpdatePolicyDialog}=require("@calendar/views/ask_recurrence_update_policy_dialog");__exports.askRecurrenceUpdatePolicy=askRecurrenceUpdatePolicy;function askRecurrenceUpdatePolicy(dialogService){return new Promise((resolve)=>{dialogService.add(AskRecurrenceUpdatePolicyDialog,{confirm:resolve,},{onClose:resolve.bind(null,false),});});}
+__exports.useAskRecurrenceUpdatePolicy=useAskRecurrenceUpdatePolicy;function useAskRecurrenceUpdatePolicy(){const dialogService=useService("dialog");return askRecurrenceUpdatePolicy.bind(null,dialogService);}
+return __exports;});;
+
+/* /calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js */
+odoo.define('@calendar/views/attendee_calendar/attendee_calendar_controller',['@web/core/l10n/translation','@web/views/calendar/calendar_controller','@web/core/utils/hooks','@odoo/owl','@calendar/views/calendar_form/calendar_quick_create'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{CalendarController}=require("@web/views/calendar/calendar_controller");const{useService}=require("@web/core/utils/hooks");const{onWillStart}=require("@odoo/owl");const{CalendarQuickCreate}=require("@calendar/views/calendar_form/calendar_quick_create");const AttendeeCalendarController=__exports.AttendeeCalendarController=class AttendeeCalendarController extends CalendarController{setup(){super.setup();this.actionService=useService("action");this.user=useService("user");this.orm=useService("orm");onWillStart(async()=>{this.isSystemUser=await this.user.hasGroup('base.group_system');});}
+onClickAddButton(){this.actionService.doAction({type:'ir.actions.act_window',res_model:'calendar.event',views:[[false,'form']],},{additionalContext:this.props.context,});}
+goToFullEvent(resId,additionalContext){this.actionService.doAction({type:'ir.actions.act_window',res_model:'calendar.event',views:[[false,'form']],res_id:resId||false,},{additionalContext:{...this.props.context,...additionalContext}});}
+getQuickCreateFormViewProps(record){const props=super.getQuickCreateFormViewProps(record);const onDialogClosed=()=>{this.model.load();};return{...props,size:"md",goToFullEvent:(contextData)=>{const fullContext={...props.context,...contextData};this.goToFullEvent(false,fullContext)},onRecordSaved:()=>onDialogClosed(),};}
+async editRecord(record,context={}){if(record.id){return this.goToFullEvent(record.id,context);}}
+deleteRecord(record){if(this.user.partnerId===record.attendeeId&&this.user.partnerId===record.rawRecord.partner_id[0]){if(record.rawRecord.recurrency){this.openRecurringDeletionWizard(record);}else{super.deleteRecord(...arguments);}}else{this.orm.call("calendar.attendee","do_decline",[record.calendarAttendeeId],).then(this.model.load.bind(this.model));}}
+openRecurringDeletionWizard(record){this.actionService.doAction({type:'ir.actions.act_window',res_model:'calendar.popover.delete.wizard',views:[[false,'form']],view_mode:"form",name:'Delete Recurring Event',context:{'default_record':record.id},target:'new'},{onClose:()=>{location.reload();},});}
+configureCalendarProviderSync(providerName){this.actionService.doAction({name:_t('Connect your Calendar'),type:'ir.actions.act_window',res_model:'calendar.provider.config',views:[[false,"form"]],view_mode:"form",target:'new',context:{'default_external_calendar_provider':providerName,'dialog_size':'medium',}});}}
+AttendeeCalendarController.template="calendar.AttendeeCalendarController";AttendeeCalendarController.components={...AttendeeCalendarController.components,QuickCreateFormView:CalendarQuickCreate,}
+return __exports;});;
+
+/* /calendar/static/src/views/attendee_calendar/attendee_calendar_model.js */
+odoo.define('@calendar/views/attendee_calendar/attendee_calendar_model',['@web/core/l10n/translation','@web/views/calendar/calendar_model','@calendar/views/ask_recurrence_update_policy_hook','@web/core/confirmation_dialog/confirmation_dialog','@odoo/owl'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{CalendarModel}=require("@web/views/calendar/calendar_model");const{askRecurrenceUpdatePolicy}=require("@calendar/views/ask_recurrence_update_policy_hook");const{ConfirmationDialog}=require("@web/core/confirmation_dialog/confirmation_dialog");const{onWillStart}=require("@odoo/owl");const AttendeeCalendarModel=__exports.AttendeeCalendarModel=class AttendeeCalendarModel extends CalendarModel{setup(params,{dialog,rpc}){super.setup(...arguments);this.dialog=dialog;this.rpc=rpc;onWillStart(async()=>{this.credentialStatus=await this.rpc("/calendar/check_credentials");});}
+get attendees(){return this.data.attendees;}
+async updateRecord(record){const rec=this.records[record.id];if(rec.rawRecord.recurrency){const recurrenceUpdate=await askRecurrenceUpdatePolicy(this.dialog);if(!recurrenceUpdate){return this.notify();}
+record.recurrenceUpdate=recurrenceUpdate;}
+return await super.updateRecord(...arguments);}
+buildRawRecord(partialRecord,options={}){const result=super.buildRawRecord(...arguments);if(partialRecord.recurrenceUpdate){result.recurrence_update=partialRecord.recurrenceUpdate;}
+return result;}
+async updateData(data){await super.updateData(...arguments);await this.updateAttendeeData(data);}
+async updateAttendeeData(data){const attendeeFilters=data.filterSections.partner_ids;let isEveryoneFilterActive=false;let attendeeIds=[];const eventIds=Object.keys(data.records).map(id=>Number.parseInt(id));if(attendeeFilters){const allFilter=attendeeFilters.filters.find(filter=>filter.type==="all")
+isEveryoneFilterActive=allFilter&&allFilter.active||false;attendeeIds=attendeeFilters.filters.filter(filter=>filter.type!=="all"&&filter.value).map(filter=>filter.value);}
+data.attendees=await this.orm.call("res.partner","get_attendee_detail",[attendeeIds,eventIds],);const currentPartnerId=this.user.partnerId;if(!isEveryoneFilterActive){const activeAttendeeIds=new Set(attendeeFilters.filters.filter(filter=>filter.type!=="all"&&filter.value&&filter.active).map(filter=>filter.value));const newRecords={};let duplicatedRecordIdx=-1;for(const event of Object.values(data.records)){const eventData=event.rawRecord;const attendees=eventData.partner_ids&&eventData.partner_ids.length?eventData.partner_ids:[eventData.partner_id[0]];let duplicatedRecords=0;for(const attendee of attendees){if(!activeAttendeeIds.has(attendee)){continue;}
+const record={...event};const attendeeInfo=data.attendees.find(a=>(a.id===attendee&&a.event_id===event.id));record.attendeeId=attendee;record.colorIndex=attendee;if(attendeeInfo){record.attendeeStatus=attendeeInfo.status;record.isAlone=attendeeInfo.is_alone;record.isCurrentPartner=attendeeInfo.id===currentPartnerId;record.calendarAttendeeId=attendeeInfo.attendee_id;}
+const recordId=duplicatedRecords?duplicatedRecordIdx--:record.id;record._recordId=recordId;newRecords[recordId]=record;duplicatedRecords++;}}
+data.records=newRecords;}else{for(const event of Object.values(data.records)){const eventData=event.rawRecord;event.attendeeId=eventData.partner_id&&eventData.partner_id[0]
+const attendeeInfo=data.attendees.find(a=>(a.id===currentPartnerId&&a.event_id===event.id));if(attendeeInfo){event.isAlone=attendeeInfo.is_alone;event.calendarAttendeeId=attendeeInfo.attendee_id;}}}}
+async archiveRecord(record){let recurrenceUpdate=false;if(record.rawRecord.recurrency){recurrenceUpdate=await askRecurrenceUpdatePolicy(this.dialog);if(!recurrenceUpdate){return;}}else{const confirm=await new Promise((resolve)=>{this.dialog.add(ConfirmationDialog,{body:_t("Are you sure you want to delete this record?"),confirm:resolve.bind(null,true),},{onClose:resolve.bind(null,false),});})
+if(!confirm){return;}}
+await this._archiveRecord(record.id,recurrenceUpdate);}
+async _archiveRecord(id,recurrenceUpdate){if(!recurrenceUpdate&&recurrenceUpdate!=="self_only"){await this.orm.call(this.resModel,"action_archive",[[id]],);}else{await this.orm.call(this.resModel,"action_mass_archive",[[id],recurrenceUpdate],);}
+await this.load();}}
+AttendeeCalendarModel.services=[...CalendarModel.services,"dialog","orm"];return __exports;});;
+
+/* /calendar/static/src/views/attendee_calendar/attendee_calendar_renderer.js */
+odoo.define('@calendar/views/attendee_calendar/attendee_calendar_renderer',['@web/views/calendar/calendar_renderer','@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer','@calendar/views/attendee_calendar/year/attendee_calendar_year_renderer'],function(require){'use strict';let __exports={};const{CalendarRenderer}=require("@web/views/calendar/calendar_renderer");const{AttendeeCalendarCommonRenderer}=require("@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer");const{AttendeeCalendarYearRenderer}=require("@calendar/views/attendee_calendar/year/attendee_calendar_year_renderer");const AttendeeCalendarRenderer=__exports.AttendeeCalendarRenderer=class AttendeeCalendarRenderer extends CalendarRenderer{}
+AttendeeCalendarRenderer.components={...CalendarRenderer.components,day:AttendeeCalendarCommonRenderer,week:AttendeeCalendarCommonRenderer,month:AttendeeCalendarCommonRenderer,year:AttendeeCalendarYearRenderer,};return __exports;});;
+
+/* /calendar/static/src/views/attendee_calendar/attendee_calendar_view.js */
+odoo.define('@calendar/views/attendee_calendar/attendee_calendar_view',['@web/core/registry','@web/views/calendar/calendar_view','@calendar/views/attendee_calendar/attendee_calendar_controller','@calendar/views/attendee_calendar/attendee_calendar_model','@calendar/views/attendee_calendar/attendee_calendar_renderer'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{calendarView}=require("@web/views/calendar/calendar_view");const{AttendeeCalendarController}=require("@calendar/views/attendee_calendar/attendee_calendar_controller");const{AttendeeCalendarModel}=require("@calendar/views/attendee_calendar/attendee_calendar_model");const{AttendeeCalendarRenderer}=require("@calendar/views/attendee_calendar/attendee_calendar_renderer");const attendeeCalendarView=__exports.attendeeCalendarView={...calendarView,Controller:AttendeeCalendarController,Model:AttendeeCalendarModel,Renderer:AttendeeCalendarRenderer,};registry.category("views").add("attendee_calendar",attendeeCalendarView);return __exports;});;
+
+/* /calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.js */
+odoo.define('@calendar/views/attendee_calendar/common/attendee_calendar_common_popover',['@odoo/owl','@web/views/calendar/calendar_common/calendar_common_popover','@web/core/utils/hooks','@calendar/views/ask_recurrence_update_policy_hook','@web/core/dropdown/dropdown','@web/core/dropdown/dropdown_item'],function(require){'use strict';let __exports={};const{onWillStart}=require("@odoo/owl");const{CalendarCommonPopover}=require("@web/views/calendar/calendar_common/calendar_common_popover");const{useService}=require("@web/core/utils/hooks");const{useAskRecurrenceUpdatePolicy}=require("@calendar/views/ask_recurrence_update_policy_hook");const{Dropdown}=require("@web/core/dropdown/dropdown");const{DropdownItem}=require("@web/core/dropdown/dropdown_item");const AttendeeCalendarCommonPopover=__exports.AttendeeCalendarCommonPopover=class AttendeeCalendarCommonPopover extends CalendarCommonPopover{setup(){super.setup();this.user=useService("user");this.orm=useService("orm");this.actionService=useService("action");this.askRecurrenceUpdatePolicy=useAskRecurrenceUpdatePolicy();onWillStart(this.onWillStart);}
+async onWillStart(){if(this.isEventEditable){const stateSelections=await this.env.services.orm.call(this.props.model.resModel,"get_state_selections",);this.statusColors={accepted:"text-success",declined:"text-danger",tentative:"text-muted",needsAction:"false",};this.statusInfo={};for(const selection of stateSelections){this.statusInfo[selection[0]]={text:selection[1],color:this.statusColors[selection[0]],};}
+this.selectedStatusInfo=this.statusInfo[this.props.record.attendeeStatus];}}
+get isCurrentUserAttendee(){return this.props.record.rawRecord.partner_ids.includes(this.user.partnerId)||this.props.record.rawRecord.partner_id[0]===this.user.partnerId;}
+get isCurrentUserOrganizer(){return this.props.record.rawRecord.partner_id[0]===this.user.partnerId;}
+get isEventPrivate(){return this.props.record.rawRecord.privacy==="private";}
+get displayAttendeeAnswerChoice(){return(this.props.record.rawRecord.partner_ids.some((partner)=>partner!==this.user.partnerId)&&this.props.record.isCurrentPartner);}
+get isEventDetailsVisible(){return this.isEventPrivate?this.isEventEditable:true;}
+get isEventArchivable(){return false;}
+async onClickOpenRecord(){const action=await this.orm.call('calendar.event','action_open_calendar_event',[this.props.record.id]);this.actionService.doAction(action);}
+get isEventDeletable(){return super.isEventDeletable&&this.isEventEditable&&!this.isEventArchivable;}
+get isEventEditable(){return this.props.record.rawRecord.user_can_edit;}
+get isEventViewable(){return this.isEventPrivate?this.isEventEditable:super.isEventEditable;}
+get hasFooter(){return this.isEventViewable||super.hasFooter;}
+async changeAttendeeStatus(selectedStatus){const record=this.props.record;if(record.attendeeStatus===selectedStatus){return this.props.close();}
+let recurrenceUpdate=false;if(record.rawRecord.recurrency){recurrenceUpdate=await this.askRecurrenceUpdatePolicy();if(!recurrenceUpdate){return this.props.close();}}
+await this.env.services.orm.call(this.props.model.resModel,"change_attendee_status",[[record.id],selectedStatus,recurrenceUpdate],);await this.props.model.load();this.props.close();}
+async onClickArchive(){this.props.close();await this.props.model.archiveRecord(this.props.record);}}
+AttendeeCalendarCommonPopover.components={...CalendarCommonPopover.components,Dropdown,DropdownItem,};AttendeeCalendarCommonPopover.subTemplates={...CalendarCommonPopover.subTemplates,body:"calendar.AttendeeCalendarCommonPopover.body",footer:"calendar.AttendeeCalendarCommonPopover.footer",};return __exports;});;
+
+/* /calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_renderer.js */
+odoo.define('@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer',['@web/core/utils/hooks','@web/views/calendar/calendar_common/calendar_common_renderer','@calendar/views/attendee_calendar/common/attendee_calendar_common_popover'],function(require){'use strict';let __exports={};const{useService}=require("@web/core/utils/hooks");const{CalendarCommonRenderer}=require("@web/views/calendar/calendar_common/calendar_common_renderer");const{AttendeeCalendarCommonPopover}=require("@calendar/views/attendee_calendar/common/attendee_calendar_common_popover");const AttendeeCalendarCommonRenderer=__exports.AttendeeCalendarCommonRenderer=class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer{setup(){super.setup();this.user=useService("user");}
+convertRecordToEvent(record){let editable=false;if(record&&record.rawRecord){editable=record.rawRecord.user_can_edit;}
+return{...super.convertRecordToEvent(record),id:record._recordId||record.id,editable:editable,};}
+onEventRender(info){super.onEventRender(...arguments);const{el,event}=info;const record=this.props.model.records[event.id];if(record){if(this.env.searchModel?.context?.default_calendar_event_id===parseInt(event.id)){this.openPopover(info.el,record);}
+if(record.rawRecord.is_highlighted){el.classList.add("o_event_highlight");}
+if(record.isAlone){el.classList.add("o_attendee_status_alone");}else{el.classList.add(`o_attendee_status_${record.attendeeStatus}`);}}}
+isSelectionAllowed(event){return true;}}
+AttendeeCalendarCommonRenderer.eventTemplate="calendar.AttendeeCalendarCommonRenderer.event";AttendeeCalendarCommonRenderer.components={...CalendarCommonRenderer.components,Popover:AttendeeCalendarCommonPopover,};return __exports;});;
+
+/* /calendar/static/src/views/attendee_calendar/year/attendee_calendar_year_popover.js */
+odoo.define('@calendar/views/attendee_calendar/year/attendee_calendar_year_popover',['@web/views/calendar/calendar_year/calendar_year_popover'],function(require){'use strict';let __exports={};const{CalendarYearPopover}=require("@web/views/calendar/calendar_year/calendar_year_popover");const AttendeeCalendarYearPopover=__exports.AttendeeCalendarYearPopover=class AttendeeCalendarYearPopover extends CalendarYearPopover{getRecordClass(record){const classes=[super.getRecordClass(record)];if(record.isAlone){classes.push("o_attendee_status_alone");}else{classes.push(`o_attendee_status_${record.attendeeStatus}`);}
+return classes.join(" ");}}
+AttendeeCalendarYearPopover.subTemplates={...CalendarYearPopover.subTemplates,body:"calendar.AttendeeCalendarYearPopover.body",};return __exports;});;
+
+/* /calendar/static/src/views/attendee_calendar/year/attendee_calendar_year_renderer.js */
+odoo.define('@calendar/views/attendee_calendar/year/attendee_calendar_year_renderer',['@web/views/calendar/calendar_year/calendar_year_renderer','@calendar/views/attendee_calendar/year/attendee_calendar_year_popover'],function(require){'use strict';let __exports={};const{CalendarYearRenderer}=require("@web/views/calendar/calendar_year/calendar_year_renderer");const{AttendeeCalendarYearPopover}=require("@calendar/views/attendee_calendar/year/attendee_calendar_year_popover");const AttendeeCalendarYearRenderer=__exports.AttendeeCalendarYearRenderer=class AttendeeCalendarYearRenderer extends CalendarYearRenderer{}
+AttendeeCalendarYearRenderer.components={...CalendarYearRenderer.components,Popover:AttendeeCalendarYearPopover,};return __exports;});;
+
+/* /calendar/static/src/views/calendar_form/calendar_form_controller.js */
+odoo.define('@calendar/views/calendar_form/calendar_form_controller',['@web/views/form/form_controller','@web/core/utils/hooks','@odoo/owl'],function(require){'use strict';let __exports={};const{FormController}=require("@web/views/form/form_controller");const{useService}=require("@web/core/utils/hooks");const{onWillStart}=require("@odoo/owl");const CalendarFormController=__exports.CalendarFormController=class CalendarFormController extends FormController{setup(){super.setup();const ormService=useService("orm");onWillStart(async()=>{this.discussVideocallLocation=await ormService.call("calendar.event","get_discuss_videocall_location");});}
+async beforeExecuteActionButton(clickParams){const action=clickParams.name;if(action=="clear_videocall_location"||action==="set_discuss_videocall_location"){let newVal="";let videoCallSource="custom";let changes={};if(action==="set_discuss_videocall_location"){newVal=this.discussVideocallLocation;videoCallSource="discuss";changes.access_token=this.discussVideocallLocation.split("/").pop();}
+changes=Object.assign(changes,{videocall_location:newVal,videocall_source:videoCallSource,});this.model.root.update(changes);return false;}
+return super.beforeExecuteActionButton(...arguments);}}
+return __exports;});;
+
+/* /calendar/static/src/views/calendar_form/calendar_form_view.js */
+odoo.define('@calendar/views/calendar_form/calendar_form_view',['@web/core/registry','@web/views/form/form_view','@calendar/views/calendar_form/calendar_form_controller'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{formView}=require("@web/views/form/form_view");const{CalendarFormController}=require("@calendar/views/calendar_form/calendar_form_controller");const CalendarFormView=__exports.CalendarFormView={...formView,Controller:CalendarFormController,};registry.category("views").add("calendar_form",CalendarFormView);return __exports;});;
+
+/* /calendar/static/src/views/calendar_form/calendar_quick_create.js */
+odoo.define('@calendar/views/calendar_form/calendar_quick_create',['@web/core/registry','@web/views/view_dialogs/form_view_dialog','@calendar/views/calendar_form/calendar_form_view','@calendar/views/calendar_form/calendar_form_controller','@web/core/l10n/dates'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{FormViewDialog}=require("@web/views/view_dialogs/form_view_dialog");const{CalendarFormView}=require("@calendar/views/calendar_form/calendar_form_view");const{CalendarFormController}=require("@calendar/views/calendar_form/calendar_form_controller");const{serializeDate,serializeDateTime}=require("@web/core/l10n/dates");const QUICK_CREATE_CALENDAR_EVENT_FIELDS={name:{type:"string"},start:{type:"datetime"},start_date:{type:"date"},stop_date:{type:"date"},stop:{type:"datetime"},allday:{type:"boolean"},partner_ids:{type:"many2many"},videocall_location:{type:"string"},description:{type:"string"}};function getDefaultValuesFromRecord(data){const context={};for(let fieldName in QUICK_CREATE_CALENDAR_EVENT_FIELDS){if(fieldName in data){let value=data[fieldName];const{type}=QUICK_CREATE_CALENDAR_EVENT_FIELDS[fieldName]
+if(type==='many2many'){value=value.records.map((record)=>record.resId);}else if(type==='date'){value=value&&serializeDate(value);}else if(type==="datetime"){value=value&&serializeDateTime(value);}
+context[`default_${fieldName}`]=value||false;}}
+return context;}
+const CalendarQuickCreateFormController=__exports.CalendarQuickCreateFormController=class CalendarQuickCreateFormController extends CalendarFormController{static props={...CalendarFormController.props,goToFullEvent:Function,};goToFullEvent(){const context=getDefaultValuesFromRecord(this.model.root.data)
+this.props.goToFullEvent(context);}}
+registry.category("views").add("calendar_quick_create_form_view",{...CalendarFormView,Controller:CalendarQuickCreateFormController,});const CalendarQuickCreate=__exports.CalendarQuickCreate=class CalendarQuickCreate extends FormViewDialog{static props={...FormViewDialog.props,goToFullEvent:Function,};setup(){super.setup();Object.assign(this.viewProps,{...this.viewProps,buttonTemplate:"calendar.CalendarQuickCreateButtons",goToFullEvent:(contextData)=>{this.props.goToFullEvent(contextData);}});}}
+return __exports;});;
+
+/* /calendar/static/src/views/fields/attendee_tags_list.js */
+odoo.define('@calendar/views/fields/attendee_tags_list',['@web/core/tags_list/tags_list'],function(require){'use strict';let __exports={};const{TagsList}=require("@web/core/tags_list/tags_list");const AttendeeTagsList=__exports.AttendeeTagsList=class AttendeeTagsList extends TagsList{}
+AttendeeTagsList.template="calendar.AttendeeTagsList";return __exports;});;
+
+/* /calendar/static/src/views/fields/many2many_attendee.js */
+odoo.define('@calendar/views/fields/many2many_attendee',['@web/core/registry','@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field','@web/views/fields/relational_utils','@calendar/views/fields/attendee_tags_list'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{Many2ManyTagsAvatarField,many2ManyTagsAvatarField,}=require("@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field");const{useSpecialData}=require("@web/views/fields/relational_utils");const{AttendeeTagsList}=require("@calendar/views/fields/attendee_tags_list");const ICON_BY_STATUS={accepted:"fa-check",declined:"fa-times",tentative:"fa-question",};const Many2ManyAttendee=__exports.Many2ManyAttendee=class Many2ManyAttendee extends Many2ManyTagsAvatarField{setup(){super.setup();this.specialData=useSpecialData((orm,props)=>{const{context,name,record}=props;return orm.call("res.partner","get_attendee_detail",[record.data[name].records.map((rec)=>rec.resId),[record.resId||false]],{context,});});}
+get tags(){const partnerIds=this.specialData.data;const tags=super.tags.map((tag)=>{const partner=partnerIds.find((partner)=>tag.resId===partner.id);if(partner){tag.status=partner.status;tag.statusIcon=ICON_BY_STATUS[partner.status];}
+return tag;});const organizer=partnerIds.find((partner)=>partner.is_organizer);if(organizer){const orgId=organizer.id;tags.sort((a,b)=>{const a_org=a.resId===orgId;return a_org?-1:1;});}
+return tags;}}
+Many2ManyAttendee.template="calendar.Many2ManyAttendee";Many2ManyAttendee.components={...Many2ManyAttendee.components,TagsList:AttendeeTagsList,};const many2ManyAttendee=__exports.many2ManyAttendee={...many2ManyTagsAvatarField,component:Many2ManyAttendee,additionalClasses:["o_field_many2many_tags_avatar","w-100"],};registry.category("fields").add("many2manyattendee",many2ManyAttendee);return __exports;});;
+
+/* /calendar/static/src/views/fields/many2many_attendee_expandable.js */
+odoo.define('@calendar/views/fields/many2many_attendee_expandable',['@odoo/owl','@web/core/registry','@web/core/position_hook','@calendar/views/fields/many2many_attendee'],function(require){'use strict';let __exports={};const{useState,useEffect}=require("@odoo/owl");const{registry}=require("@web/core/registry");const{reposition}=require("@web/core/position_hook");const{Many2ManyAttendee,many2ManyAttendee,}=require("@calendar/views/fields/many2many_attendee");const Many2ManyAttendeeExpandable=__exports.Many2ManyAttendeeExpandable=class Many2ManyAttendeeExpandable extends Many2ManyAttendee{state=useState({expanded:false});setup(){super.setup();this.attendeesCount=this.props.record.data.attendees_count;this.acceptedCount=this.props.record.data.accepted_count;this.declinedCount=this.props.record.data.declined_count;this.uncertainCount=this.attendeesCount-this.acceptedCount-this.declinedCount;if(!this.env.isSmall){useEffect(()=>{const popover=document.querySelector(".o_field_many2manyattendeeexpandable").closest(".o_popover");const target=document.querySelector(`.fc-event[data-event-id="${this.props.record.resId}"]`);reposition(popover,target,{position:"right",margin:0});},()=>[this.state.expanded]);}}
+onExpanderClick(){this.state.expanded=!this.state.expanded;}}
+Many2ManyAttendeeExpandable.template="calendar.Many2ManyAttendeeExpandable";const many2ManyAttendeeExpandable=__exports.many2ManyAttendeeExpandable={...many2ManyAttendee,component:Many2ManyAttendeeExpandable,};registry.category("fields").add("many2manyattendeeexpandable",many2ManyAttendeeExpandable);return __exports;});;
+
+/* /calendar/static/src/views/widgets/calendar_week_days.js */
+odoo.define('@calendar/views/widgets/calendar_week_days',['@web/core/registry','@web/views/widgets/week_days/week_days'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{WeekDays,weekDays}=require("@web/views/widgets/week_days/week_days");const CalendarWeekDays=__exports.CalendarWeekDays=class CalendarWeekDays extends WeekDays{onChange(day){this.props.record.update({[day]:!this.data[day]});}};CalendarWeekDays.template='calendar.WeekDays';const calendarWeekDays=__exports.calendarWeekDays={component:CalendarWeekDays,fieldDependencies:weekDays.fieldDependencies,};registry.category("view_widgets").add("calendar_week_days",calendarWeekDays);return __exports;});;
+
+/* /utm/static/src/js/utm_campaign_kanban_examples.js */
+odoo.define('@utm/js/utm_campaign_kanban_examples',['@web/core/l10n/translation','@web/core/registry'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{registry}=require("@web/core/registry");const exampleData={ghostColumns:[_t('Ideas'),_t('Design'),_t('Review'),_t('Send'),_t('Done')],applyExamplesText:_t("Use This For My Campaigns"),allowedGroupBys:['stage_id'],examples:[{name:_t('Creative Flow'),columns:[_t('Ideas'),_t('Design'),_t('Review'),_t('Send'),_t('Done')],description:_t("Collect ideas, design creative content and publish it once reviewed."),},{name:_t('Event-driven Flow'),columns:[_t('Later'),_t('This Month'),_t('This Week'),_t('Running'),_t('Sent')],description:_t("Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely content."),},{name:_t('Soft-Launch Flow'),columns:[_t('Pre-Launch'),_t('Soft-Launch'),_t('Deploy'),_t('Report'),_t('Done')],description:_t("Prepare your Campaign, test it with part of your audience and deploy it fully afterwards."),},{name:_t('Audience-driven Flow'),columns:[_t('Gather Data'),_t('List-Building'),_t('Copywriting'),_t('Sent')],description:_t("Gather data, build a recipient list and write content based on your Marketing target."),},{name:_t('Approval-based Flow'),columns:[_t('To be Approved'),_t('Approved'),_t('Deployed')],description:_t("Prepare Campaigns and get them approved before making them go live."),}],};registry.category("kanban_examples").add("utm_campaign",exampleData);return __exports;});;
+
+/* /crm/static/src/activity_menu_patch.js */
+odoo.define('@crm/activity_menu_patch',['@web/core/domain','@mail/core/web/activity_menu','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{Domain}=require("@web/core/domain");const{ActivityMenu}=require("@mail/core/web/activity_menu");const{patch}=require("@web/core/utils/patch");patch(ActivityMenu.prototype,{availableViews(group){if(group.model==="crm.lead"){return[[false,"list"],[false,"kanban"],[false,"form"],[false,"calendar"],[false,"pivot"],[false,"graph"],[false,"activity"],];}
+return super.availableViews(...arguments);},openActivityGroup(group,filter="all"){const context={};if(group.model==="crm.lead"){document.body.click();if(filter==="my"){context["search_default_activities_overdue"]=1;context["search_default_activities_today"]=1;}else{context["search_default_activities_"+filter]=1;}
+context["force_search_count"]=1;this.action.loadAction("crm.crm_lead_action_my_activities").then((action)=>{action.domain=Domain.and([action.domain||[],[["active","in",[true,false]]],]).toList();this.action.doAction(action,{additionalContext:context,clearBreadcrumbs:true,});});}else{return super.openActivityGroup(group,filter);}},});return __exports;});;
+
+/* /crm/static/src/js/tours/crm.js */
+odoo.define('@crm/js/tours/crm',['@web/core/l10n/translation','@web/core/registry','@web_tour/tour_service/tour_utils','@odoo/owl'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{registry}=require("@web/core/registry");const{stepUtils}=require("@web_tour/tour_service/tour_utils");const{markup}=require("@odoo/owl");registry.category("web_tour.tours").add('crm_tour',{url:"/web",rainbowManMessage:_t("Congrats, best of luck catching such big fish! :)"),sequence:10,steps:()=>[stepUtils.showAppsMenuItem(),{trigger:'.o_app[data-menu-xmlid="crm.crm_menu_root"]',content:markup(_t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.')),position:'bottom',edition:'community',},{trigger:'.o_app[data-menu-xmlid="crm.crm_menu_root"]',content:markup(_t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.')),position:'bottom',edition:'enterprise',},{trigger:'.o-kanban-button-new',extra_trigger:'.o_opportunity_kanban',content:markup(_t("<b>Create your first opportunity.</b>")),position:'bottom',},{trigger:".o_kanban_quick_create .o_field_widget[name='partner_id']",content:markup(_t('<b>Write a few letters</b> to look for a company, or create a new one.')),position:"top",run:function(actions){actions.text("Brandon Freeman",this.$anchor.find("input"));},},{trigger:".ui-menu-item > a",auto:true,in_modal:false,},{trigger:".o_kanban_quick_create .o_kanban_add",content:markup(_t("Now, <b>add your Opportunity</b> to your Pipeline.")),position:"bottom",},{trigger:".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-of-type .oe_kanban_content",extra_trigger:".o_opportunity_kanban",content:markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),position:"right",run:"drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(2) ",},{trigger:".o_opportunity_kanban .o_kanban_group:nth-child(2) .o_kanban_record .o-mail-ActivityButton",extra_trigger:".o_opportunity_kanban",content:markup(_t("Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep track of everything you have to do!</i>")),position:"bottom",},{trigger:".o-mail-ActivityListPopover button:contains(Schedule an activity)",extra_trigger:".o_opportunity_kanban",content:markup(_t("Let's <b>Schedule an Activity.</b>")),position:"bottom",width:200,},{trigger:'.modal-footer button[name="action_schedule_activities"]',content:markup(_t("All set. Let’s <b>Schedule</b> it.")),position:"top",run:function(actions){actions.auto('.modal-footer button[special=cancel]');},},{id:"drag_opportunity_to_won_step",trigger:".o_opportunity_kanban .o_kanban_record:last-of-type",content:markup(_t("Drag your opportunity to <b>Won</b> when you get the deal. Congrats!")),position:"bottom",run:"drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(3) ",},{trigger:".o_kanban_record",extra_trigger:".o_opportunity_kanban",content:_t("Let’s have a look at an Opportunity."),position:"right",run:function(actions){actions.auto(".o_kanban_record");},},{trigger:".o_lead_opportunity_form .o_statusbar_status",content:_t("You can make your opportunity advance through your pipeline from here."),position:"bottom"},{trigger:".breadcrumb-item:not(.active):first",content:_t("Click on the breadcrumb to go back to your Pipeline. Odoo will save all modifications as you navigate."),position:"bottom",run:function(actions){actions.auto(".breadcrumb-item:not(.active):last");}}]});return __exports;});;
+
+/* /crm/static/src/views/check_rainbowman_message.js */
+odoo.define('@crm/views/check_rainbowman_message',[],function(require){'use strict';let __exports={};__exports.checkRainbowmanMessage=checkRainbowmanMessage;async function checkRainbowmanMessage(orm,effect,recordId){const message=await orm.call("crm.lead","get_rainbowman_message",[[recordId]]);if(message){effect.add({message,type:"rainbow_man",});}}
+return __exports;});;
+
+/* /crm/static/src/views/crm_form/crm_form.js */
+odoo.define('@crm/views/crm_form/crm_form',['@crm/views/check_rainbowman_message','@web/core/registry','@web/views/form/form_view'],function(require){'use strict';let __exports={};const{checkRainbowmanMessage}=require("@crm/views/check_rainbowman_message");const{registry}=require("@web/core/registry");const{formView}=require("@web/views/form/form_view");class CrmFormRecord extends formView.Model.Record{async _save(){if(this.resModel!=="crm.lead"){return super._save(...arguments);}
+let changeStage=false;const needsSynchronizationEmail=this._changes.partner_email_update===undefined?this._values.partner_email_update:this._changes.partner_email_update;const needsSynchronizationPhone=this._changes.partner_phone_update===undefined?this._values.partner_phone_update:this._changes.partner_phone_update;if(needsSynchronizationEmail&&this._changes.email_from===undefined&&this._values.email_from){this._changes.email_from=this._values.email_from;}
+if(needsSynchronizationPhone&&this._changes.phone===undefined&&this._values.phone){this._changes.phone=this._values.phone;}
+if("stage_id"in this._changes){changeStage=this._values.stage_id!==this.data.stage_id;}
+const res=await super._save(...arguments);if(changeStage){await checkRainbowmanMessage(this.model.orm,this.model.effect,this.resId);}
+return res;}}
+class CrmFormModel extends formView.Model{static Record=CrmFormRecord;static services=[...formView.Model.services,"effect"];setup(params,services){super.setup(...arguments);this.effect=services.effect;}}
+registry.category("views").add("crm_form",{...formView,Model:CrmFormModel,});return __exports;});;
+
+/* /crm/static/src/views/crm_kanban/crm_column_progress.js */
+odoo.define('@crm/views/crm_kanban/crm_column_progress',['@odoo/owl','@web/core/utils/hooks','@web/views/view_components/column_progress','@web/session','@web/core/currency'],function(require){'use strict';let __exports={};const{onWillStart}=require("@odoo/owl");const{useService}=require("@web/core/utils/hooks");const{ColumnProgress}=require("@web/views/view_components/column_progress");const{session}=require("@web/session");const{getCurrency}=require("@web/core/currency");const CrmColumnProgress=__exports.CrmColumnProgress=class CrmColumnProgress extends ColumnProgress{static props={...ColumnProgress.props,progressBarState:{type:Object},};static template="crm.ColumnProgress";setup(){super.setup();this.user=useService("user");this.showRecurringRevenue=false;onWillStart(async()=>{if(this.props.progressBarState.progressAttributes.recurring_revenue_sum_field){this.showRecurringRevenue=await this.user.hasGroup("crm.group_use_recurring_revenues");}});}
+getRecurringRevenueGroupAggregate(group){const rrField=this.props.progressBarState.progressAttributes.recurring_revenue_sum_field;const aggregatedValue=this.props.progressBarState.getAggregateValue(group,rrField);let currency=false;if(aggregatedValue.value&&rrField.currency_field){currency=getCurrency(session.company_currency_id);}
+return{...aggregatedValue,currency};}}
+return __exports;});;
+
+/* /crm/static/src/views/crm_kanban/crm_kanban_arch_parser.js */
+odoo.define('@crm/views/crm_kanban/crm_kanban_arch_parser',['@web/views/kanban/kanban_arch_parser','@web/core/utils/xml'],function(require){'use strict';let __exports={};const{KanbanArchParser}=require("@web/views/kanban/kanban_arch_parser");const{extractAttributes}=require("@web/core/utils/xml");const CrmKanbanArchParser=__exports.CrmKanbanArchParser=class CrmKanbanArchParser extends KanbanArchParser{parseProgressBar(progressBar,fields){const result=super.parseProgressBar(...arguments);const attrs=extractAttributes(progressBar,["recurring_revenue_sum_field"]);result.recurring_revenue_sum_field=fields[attrs.recurring_revenue_sum_field]||false;return result;}}
+return __exports;});;
+
+/* /crm/static/src/views/crm_kanban/crm_kanban_model.js */
+odoo.define('@crm/views/crm_kanban/crm_kanban_model',['@crm/views/check_rainbowman_message','@web/model/relational_model/relational_model'],function(require){'use strict';let __exports={};const{checkRainbowmanMessage}=require("@crm/views/check_rainbowman_message");const{RelationalModel}=require("@web/model/relational_model/relational_model");const CrmKanbanModel=__exports.CrmKanbanModel=class CrmKanbanModel extends RelationalModel{setup(params,{effect}){super.setup(...arguments);this.effect=effect;}}
+const CrmKanbanDynamicGroupList=__exports.CrmKanbanDynamicGroupList=class CrmKanbanDynamicGroupList extends RelationalModel.DynamicGroupList{async moveRecord(dataRecordId,dataGroupId,refId,targetGroupId){await super.moveRecord(...arguments);const sourceGroup=this.groups.find((g)=>g.id===dataGroupId);const targetGroup=this.groups.find((g)=>g.id===targetGroupId);if(dataGroupId!==targetGroupId&&sourceGroup&&targetGroup&&sourceGroup.groupByField.name==="stage_id"){const record=targetGroup.list.records.find((r)=>r.id===dataRecordId);await checkRainbowmanMessage(this.model.orm,this.model.effect,record.resId);}}}
+CrmKanbanModel.DynamicGroupList=CrmKanbanDynamicGroupList;CrmKanbanModel.services=[...RelationalModel.services,"effect"];return __exports;});;
+
+/* /crm/static/src/views/crm_kanban/crm_kanban_renderer.js */
+odoo.define('@crm/views/crm_kanban/crm_kanban_renderer',['@crm/views/crm_kanban/crm_column_progress','@web/views/kanban/kanban_renderer','@web/views/kanban/kanban_header'],function(require){'use strict';let __exports={};const{CrmColumnProgress}=require("@crm/views/crm_kanban/crm_column_progress");const{KanbanRenderer}=require("@web/views/kanban/kanban_renderer");const{KanbanHeader}=require("@web/views/kanban/kanban_header");class CrmKanbanHeader extends KanbanHeader{static template="crm.CrmKanbanHeader";static components={...KanbanHeader.components,ColumnProgress:CrmColumnProgress,};}
+const CrmKanbanRenderer=__exports.CrmKanbanRenderer=class CrmKanbanRenderer extends KanbanRenderer{}
+CrmKanbanRenderer.components={...KanbanRenderer.components,KanbanHeader:CrmKanbanHeader,};return __exports;});;
+
+/* /crm/static/src/views/crm_kanban/crm_kanban_view.js */
+odoo.define('@crm/views/crm_kanban/crm_kanban_view',['@web/core/registry','@web/views/kanban/kanban_view','@crm/views/crm_kanban/crm_kanban_model','@crm/views/crm_kanban/crm_kanban_arch_parser','@crm/views/crm_kanban/crm_kanban_renderer'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{kanbanView}=require("@web/views/kanban/kanban_view");const{CrmKanbanModel}=require("@crm/views/crm_kanban/crm_kanban_model");const{CrmKanbanArchParser}=require("@crm/views/crm_kanban/crm_kanban_arch_parser");const{CrmKanbanRenderer}=require("@crm/views/crm_kanban/crm_kanban_renderer");const crmKanbanView=__exports.crmKanbanView={...kanbanView,ArchParser:CrmKanbanArchParser,Controller:class extends kanbanView.Controller{get progressBarAggregateFields(){const res=super.progressBarAggregateFields;const progressAttributes=this.props.archInfo.progressAttributes;if(progressAttributes&&progressAttributes.recurring_revenue_sum_field){res.push(progressAttributes.recurring_revenue_sum_field);}
+return res;}},Model:CrmKanbanModel,Renderer:CrmKanbanRenderer,};registry.category("views").add("crm_kanban",crmKanbanView);return __exports;});;
+
+/* /crm/static/src/views/fill_temporal_service.js */
+odoo.define('@crm/views/fill_temporal_service',['@web/core/registry','@web/core/l10n/dates'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{serializeDate,serializeDateTime,}=require("@web/core/l10n/dates");const GRANULARITY_TABLE=__exports.GRANULARITY_TABLE={hour:{startOf:(x)=>x.startOf("hour"),cycle:24,cyclePos:(x)=>x.hour+1,},day:{startOf:(x)=>x.startOf("day"),cycle:7,cyclePos:(x)=>x.weekday,},week:{startOf:(x)=>x.startOf("week"),cycle:1,cyclePos:(x)=>1,},month:{startOf:(x)=>x.startOf("month"),cycle:12,cyclePos:(x)=>x.month,},quarter:{startOf:(x)=>x.startOf("quarter"),cycle:4,cyclePos:(x)=>x.quarter,},year:{startOf:(x)=>x.startOf("year"),cycle:1,cyclePos:(x)=>1,},};const FillTemporalPeriod=__exports.FillTemporalPeriod=class FillTemporalPeriod{constructor(modelName,field,granularity,minGroups){this.modelName=modelName;this.field=field;this.granularity=granularity||"month";this.setMinGroups(minGroups);this._computeStart();this._computeEnd();}
+_computeStart(){this.start=GRANULARITY_TABLE[this.granularity].startOf(luxon.DateTime.now());}
+_computeEnd(){const cycle=GRANULARITY_TABLE[this.granularity].cycle;const cyclePos=GRANULARITY_TABLE[this.granularity].cyclePos(this.start);const fillTemporalPeriod=((2*cycle-((this.minGroups-1)%cycle)-cyclePos)%cycle)+this.minGroups;this.end=this.start.plus({[`${this.granularity}s`]:fillTemporalPeriod});this.computedEnd=true;}
+_getFormattedServerDate(bound){if(this.field.type==="date"){return serializeDate(bound);}else{return serializeDateTime(bound);}}
+getDomain({domain,forceStartBound=true,forceEndBound=true}){if(!forceEndBound&&!forceStartBound){return domain;}
+const originalDomain=domain.length?["&",...domain]:[];const defaultDomain=["|",[this.field.name,"=",false]];const linkDomain=forceStartBound&&forceEndBound?["&"]:[];const startDomain=!forceStartBound?[]:[[this.field.name,">=",this._getFormattedServerDate(this.start)]];const endDomain=!forceEndBound?[]:[[this.field.name,"<",this._getFormattedServerDate(this.end)]];return[...originalDomain,...defaultDomain,...linkDomain,...startDomain,...endDomain];}
+getContext({context,forceFillingFrom=true,forceFillingTo=!this.computedEnd}){const fillTemporal={min_groups:this.minGroups,};if(forceFillingFrom){fillTemporal.fill_from=this._getFormattedServerDate(this.start);}
+if(forceFillingTo){const minGranularity=this.field.type==="date"?"days":"seconds";fillTemporal.fill_to=this._getFormattedServerDate(this.end.minus({[minGranularity]:1}));}
+context={...context,fill_temporal:fillTemporal};return context;}
+setMinGroups(minGroups){this.minGroups=minGroups||1;}
+setEnd(end){this.end=luxon.DateTime.max(this.start,end);this.computedEnd=false;}
+setStart(start){this.start=luxon.DateTime.min(this.end,start);}
+expand(){this.setEnd(this.end.plus({[`${this.granularity}s`]:1}));}}
+const fillTemporalService=__exports.fillTemporalService={start(){const _fillTemporalPeriods={};const getFillTemporalPeriod=({modelName,field,granularity,minGroups=4,forceRecompute=false})=>{if(!(modelName in _fillTemporalPeriods)){_fillTemporalPeriods[modelName]={};}
+if(!(field.name in _fillTemporalPeriods[modelName])){_fillTemporalPeriods[modelName][field.name]={};}
+if(!(granularity in _fillTemporalPeriods[modelName][field.name])||forceRecompute){_fillTemporalPeriods[modelName][field.name][granularity]=new FillTemporalPeriod(modelName,field,granularity,minGroups);}else if(_fillTemporalPeriods[modelName][field.name][granularity].minGroups!=minGroups){_fillTemporalPeriods[modelName][field.name][granularity].setMinGroups(minGroups);}
+return _fillTemporalPeriods[modelName][field.name][granularity];};return{getFillTemporalPeriod};},};registry.category("services").add("fillTemporalService",fillTemporalService);return __exports;});;
+
+/* /crm/static/src/views/forecast_graph/forecast_graph_view.js */
+odoo.define('@crm/views/forecast_graph/forecast_graph_view',['@web/core/registry','@web/views/graph/graph_view','@crm/views/forecast_search_model'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{graphView}=require("@web/views/graph/graph_view");const{ForecastSearchModel}=require("@crm/views/forecast_search_model");const forecastGraphView=__exports.forecastGraphView={...graphView,SearchModel:ForecastSearchModel,};registry.category("views").add("forecast_graph",forecastGraphView);return __exports;});;
+
+/* /crm/static/src/views/forecast_kanban/forecast_kanban_column_quick_create.js */
+odoo.define('@crm/views/forecast_kanban/forecast_kanban_column_quick_create',['@web/core/l10n/translation','@web/search/utils/dates','@web/views/kanban/kanban_column_quick_create'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{INTERVAL_OPTIONS}=require("@web/search/utils/dates");const{KanbanColumnQuickCreate}=require("@web/views/kanban/kanban_column_quick_create");const ForecastKanbanColumnQuickCreate=__exports.ForecastKanbanColumnQuickCreate=class ForecastKanbanColumnQuickCreate extends KanbanColumnQuickCreate{get relatedFieldName(){const{granularity="month"}=this.props.groupByField;const{description}=INTERVAL_OPTIONS[granularity];return _t("Add next %s",description.toLocaleLowerCase());}
+unfold(){this.props.onValidate();}}
+return __exports;});;
+
+/* /crm/static/src/views/forecast_kanban/forecast_kanban_controller.js */
+odoo.define('@crm/views/forecast_kanban/forecast_kanban_controller',['@crm/views/crm_kanban/crm_kanban_view'],function(require){'use strict';let __exports={};const{crmKanbanView}=require("@crm/views/crm_kanban/crm_kanban_view");const ForecastKanbanController=__exports.ForecastKanbanController=class ForecastKanbanController extends crmKanbanView.Controller{isQuickCreateField(field){return super.isQuickCreateField(...arguments)||(field&&field.name==="date_deadline");}}
+return __exports;});;
+
+/* /crm/static/src/views/forecast_kanban/forecast_kanban_model.js */
+odoo.define('@crm/views/forecast_kanban/forecast_kanban_model',['@crm/views/crm_kanban/crm_kanban_model','@web/core/l10n/dates'],function(require){'use strict';let __exports={};const{CrmKanbanModel}=require("@crm/views/crm_kanban/crm_kanban_model");const{deserializeDateTime}=require("@web/core/l10n/dates");const ForecastKanbanModel=__exports.ForecastKanbanModel=class ForecastKanbanModel extends CrmKanbanModel{setup(params,{fillTemporalService}){super.setup(...arguments);this.fillTemporalService=fillTemporalService;this.forceNextRecompute=!params.state?.groups;this.originalDomain=null;this.fillTemporalDomain=null;}
+async _webReadGroup(config,firstGroupByName,orderBy){if(this.isForecastGroupBy(config)){config.context=this.fillTemporalPeriod(config).getContext({context:config.context,});if(!this.originalDomain||this.fillTemporalDomain!==config.domain){this.originalDomain=config.domain||[];}
+this.fillTemporalDomain=this.fillTemporalPeriod(config).getDomain({domain:this.originalDomain,forceStartBound:false,});config.domain=this.fillTemporalDomain;}
+return super._webReadGroup(...arguments);}
+async _loadGroupedList(config){const res=await super._loadGroupedList(...arguments);if(this.isForecastGroupBy(config)){const lastGroup=res.groups.filter((grp)=>grp.value).slice(-1)[0];if(lastGroup){this.fillTemporalPeriod(config).setEnd(deserializeDateTime(lastGroup.range.to));}}
+return res;}
+isForecastGroupBy(config){const forecastField=config.context.forecast_field;const name=config.groupBy[0].split(":")[0];return forecastField&&forecastField===name;}
+fillTemporalPeriod(config){const[groupByFieldName,granularity]=config.groupBy[0].split(":");const groupByField=config.fields[groupByFieldName];const minGroups=(config.context.fill_temporal&&config.context.fill_temporal.min_groups)||undefined;const{name,type}=groupByField;const forceRecompute=this.forceNextRecompute;this.forceNextRecompute=false;return this.fillTemporalService.getFillTemporalPeriod({modelName:config.resModel,field:{name,type,},granularity:granularity||"month",minGroups,forceRecompute,});}}
+ForecastKanbanModel.services=[...CrmKanbanModel.services,"fillTemporalService"];return __exports;});;
+
+/* /crm/static/src/views/forecast_kanban/forecast_kanban_renderer.js */
+odoo.define('@crm/views/forecast_kanban/forecast_kanban_renderer',['@crm/views/crm_kanban/crm_kanban_renderer','@web/core/utils/hooks','@crm/views/forecast_kanban/forecast_kanban_column_quick_create'],function(require){'use strict';let __exports={};const{CrmKanbanRenderer}=require("@crm/views/crm_kanban/crm_kanban_renderer");const{useService}=require("@web/core/utils/hooks");const{ForecastKanbanColumnQuickCreate}=require("@crm/views/forecast_kanban/forecast_kanban_column_quick_create");const ForecastKanbanRenderer=__exports.ForecastKanbanRenderer=class ForecastKanbanRenderer extends CrmKanbanRenderer{setup(){super.setup(...arguments);this.fillTemporalService=useService("fillTemporalService");}
+canCreateGroup(){return super.canCreateGroup(...arguments)||this.isGroupedByForecastField();}
+isGroupedByForecastField(){return(this.props.list.context.forecast_field&&this.props.list.groupByField.name===this.props.list.context.forecast_field);}
+isMovableField(field){return super.isMovableField(...arguments)||field.name==="date_deadline";}
+async addForecastColumn(){const{name,type,granularity}=this.props.list.groupByField;this.fillTemporalService.getFillTemporalPeriod({modelName:this.props.list.resModel,field:{name,type,},granularity:granularity||"month",}).expand();await this.props.list.load();}}
+ForecastKanbanRenderer.template="crm.ForecastKanbanRenderer";ForecastKanbanRenderer.components={...CrmKanbanRenderer.components,ForecastKanbanColumnQuickCreate,};return __exports;});;
+
+/* /crm/static/src/views/forecast_kanban/forecast_kanban_view.js */
+odoo.define('@crm/views/forecast_kanban/forecast_kanban_view',['@crm/views/forecast_kanban/forecast_kanban_controller','@crm/views/crm_kanban/crm_kanban_arch_parser','@crm/views/forecast_kanban/forecast_kanban_model','@crm/views/forecast_kanban/forecast_kanban_renderer','@crm/views/forecast_search_model','@web/core/registry','@web/views/kanban/kanban_view'],function(require){'use strict';let __exports={};const{ForecastKanbanController}=require("@crm/views/forecast_kanban/forecast_kanban_controller");const{CrmKanbanArchParser}=require("@crm/views/crm_kanban/crm_kanban_arch_parser");const{ForecastKanbanModel}=require("@crm/views/forecast_kanban/forecast_kanban_model");const{ForecastKanbanRenderer}=require("@crm/views/forecast_kanban/forecast_kanban_renderer");const{ForecastSearchModel}=require("@crm/views/forecast_search_model");const{registry}=require("@web/core/registry");const{kanbanView}=require("@web/views/kanban/kanban_view");const forecastKanbanView=__exports.forecastKanbanView={...kanbanView,ArchParser:CrmKanbanArchParser,Model:ForecastKanbanModel,Controller:ForecastKanbanController,Renderer:ForecastKanbanRenderer,SearchModel:ForecastSearchModel,};registry.category("views").add("forecast_kanban",forecastKanbanView);return __exports;});;
+
+/* /crm/static/src/views/forecast_list/forecast_list_view.js */
+odoo.define('@crm/views/forecast_list/forecast_list_view',['@web/core/registry','@web/views/list/list_view','@crm/views/forecast_search_model'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{listView}=require("@web/views/list/list_view");const{ForecastSearchModel}=require("@crm/views/forecast_search_model");const forecastListView=__exports.forecastListView={...listView,SearchModel:ForecastSearchModel,};registry.category("views").add("forecast_list",forecastListView);return __exports;});;
+
+/* /crm/static/src/views/forecast_pivot/forecast_pivot_view.js */
+odoo.define('@crm/views/forecast_pivot/forecast_pivot_view',['@web/core/registry','@web/views/pivot/pivot_view','@crm/views/forecast_search_model'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{pivotView}=require("@web/views/pivot/pivot_view");const{ForecastSearchModel}=require("@crm/views/forecast_search_model");const forecastPivotView=__exports.forecastPivotView={...pivotView,SearchModel:ForecastSearchModel,};registry.category("views").add("forecast_pivot",forecastPivotView);return __exports;});;
+
+/* /crm/static/src/views/forecast_search_model.js */
+odoo.define('@crm/views/forecast_search_model',['@web/core/domain','@web/core/context','@web/search/search_model','@web/core/l10n/dates'],function(require){'use strict';let __exports={};const{Domain}=require("@web/core/domain");const{makeContext}=require("@web/core/context");const{SearchModel}=require("@web/search/search_model");const{serializeDate,serializeDateTime,}=require("@web/core/l10n/dates");const ForecastSearchModel=__exports.ForecastSearchModel=class ForecastSearchModel extends SearchModel{exportState(){const state=super.exportState();state.forecast={forecastStart:this.forecastStart,};return state;}
+_getSearchItemDomain(activeItem){let domain=super._getSearchItemDomain(activeItem);const{searchItemId}=activeItem;const searchItem=this.searchItems[searchItemId];const context=makeContext([searchItem.context||{}]);if(context.forecast_filter){const forecastField=this.globalContext.forecast_field;const forecastStart=this._getForecastStart(forecastField);const forecastDomain=["|",[forecastField,"=",false],[forecastField,">=",forecastStart],];domain=Domain.and([domain,forecastDomain]);}
+return domain;}
+_getForecastStart(forecastField){if(!this.forecastStart){const{type}=this.searchViewFields[forecastField];const groupBy=this.groupBy;const firstForecastGroupBy=groupBy.find((gb)=>gb.includes(forecastField));let granularity="month";if(firstForecastGroupBy){granularity=firstForecastGroupBy.split(":")[1]||"month";}else if(groupBy.length){granularity="day";}
+const startDateTime=luxon.DateTime.now().startOf(granularity);this.forecastStart=type==="datetime"?serializeDateTime(startDateTime):serializeDate(startDateTime);}
+return this.forecastStart;}
+_importState(state){super._importState(...arguments);if(state.forecast){this.forecastStart=state.forecast.forecastStart;}}
+_reset(){super._reset();this.forecastStart=null;}}
+return __exports;});;
+
 /* /payment/static/src/js/payment_wizard_copy_clipboard_field.js */
 odoo.define('@payment/js/payment_wizard_copy_clipboard_field',['@web/core/registry','@web/views/fields/copy_clipboard/copy_clipboard_field','@web/views/fields/copy_clipboard/copy_button'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{copyClipboardButtonField,CopyClipboardButtonField,}=require("@web/views/fields/copy_clipboard/copy_clipboard_field");const{CopyButton}=require("@web/views/fields/copy_clipboard/copy_button");class PaymentWizardCopyButton extends CopyButton{async onClick(){await this.env.model.mutex.getUnlockedDef();return super.onClick();}}
 class PaymentWizardCopyClipboardButtonField extends CopyClipboardButtonField{static components={CopyButton:PaymentWizardCopyButton};}
@@ -15682,6 +15961,55 @@ function displayCreditErrorNotification(params){const translatedText=_t("Buy mor
                 ${translatedText}
             </a>`);notification.add(message,{title:params.title,type:'danger',});}}};registry.category("services").add("iapNotification",iapNotificationService);return __exports;});;
 
+/* /sms/static/src/components/phone_field/phone_field.js */
+odoo.define('@sms/components/phone_field/phone_field',['@web/core/l10n/translation','@web/core/utils/patch','@web/views/fields/phone/phone_field','@sms/components/sms_button/sms_button'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{patch}=require("@web/core/utils/patch");const{PhoneField,phoneField,formPhoneField}=require("@web/views/fields/phone/phone_field");const{SendSMSButton}=require('@sms/components/sms_button/sms_button');patch(PhoneField,{components:{...PhoneField.components,SendSMSButton},defaultProps:{...PhoneField.defaultProps,enableButton:true,},props:{...PhoneField.props,enableButton:{type:Boolean,optional:true},},});const patchDescr=()=>({extractProps({options}){const props=super.extractProps(...arguments);props.enableButton=options.enable_sms;return props;},supportedOptions:[{label:_t("Enable SMS"),name:"enable_sms",type:"boolean",default:true,}],});patch(phoneField,patchDescr());patch(formPhoneField,patchDescr());return __exports;});;
+
+/* /sms/static/src/components/sms_button/sms_button.js */
+odoo.define('@sms/components/sms_button/sms_button',['@web/core/l10n/translation','@web/core/utils/hooks','@odoo/owl'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{useService}=require("@web/core/utils/hooks");const{Component,status}=require("@odoo/owl");const SendSMSButton=__exports.SendSMSButton=class SendSMSButton extends Component{setup(){this.action=useService("action");this.user=useService("user");this.title=_t("Send SMS Text Message");}
+get phoneHref(){return"sms:"+this.props.record.data[this.props.name].replace(/\s+/g,"");}
+async onClick(){await this.props.record.save();this.action.doAction({type:"ir.actions.act_window",target:"new",name:this.title,res_model:"sms.composer",views:[[false,"form"]],context:{...this.user.context,default_res_model:this.props.record.resModel,default_res_id:this.props.record.resId,default_number_field_name:this.props.name,default_composition_mode:"comment",},},{onClose:()=>{if(status(this)==="destroyed"){return;}
+this.props.record.load();},});}}
+SendSMSButton.template="sms.SendSMSButton";SendSMSButton.props=["*"];return __exports;});;
+
+/* /sms/static/src/components/sms_widget/fields_sms_widget.js */
+odoo.define('@sms/components/sms_widget/fields_sms_widget',['@web/core/l10n/translation','@mail/views/web/fields/emojis_text_field/emojis_text_field','@web/core/utils/hooks','@web/core/registry'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{EmojisTextField,emojisTextField,}=require("@mail/views/web/fields/emojis_text_field/emojis_text_field");const{useService}=require("@web/core/utils/hooks");const{registry}=require("@web/core/registry");const SmsWidget=__exports.SmsWidget=class SmsWidget extends EmojisTextField{setup(){super.setup();this._emojiAdded=()=>this.props.record.update({[this.props.name]:this.targetEditElement.el.value});this.notification=useService('notification');}
+get encoding(){return this._extractEncoding(this.props.record.data[this.props.name]||'');}
+get nbrChar(){const content=this._getValueForSmsCounts(this.props.record.data[this.props.name]||"");return content.length+(content.match(/\n/g)||[]).length;}
+get nbrCharExplanation(){return"";}
+get nbrSMS(){return this._countSMS(this.nbrChar,this.encoding);}
+_countSMS(nbrChar,encoding){if(nbrChar===0){return 0;}
+if(encoding==='UNICODE'){if(nbrChar<=70){return 1;}
+return Math.ceil(nbrChar/67);}
+if(nbrChar<=160){return 1;}
+return Math.ceil(nbrChar/153);}
+_extractEncoding(content){if(String(content).match(RegExp("^[@£$¥èéùìòÇ\\nØø\\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\\\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà]*$"))){return'GSM7';}
+return'UNICODE';}
+_getValueForSmsCounts(value){return value;}
+async onBlur(){var content=this.props.record.data[this.props.name]||'';if(!content.trim().length&&content.length>0){this.notification.add(_t("Your SMS Text Message must include at least one non-whitespace character"),{type:'danger'},)
+await this.props.record.update({[this.props.name]:content.trim()});}}
+async onInput(ev){super.onInput(...arguments);await this.props.record.update({[this.props.name]:this.targetEditElement.el.value});}}
+SmsWidget.template='sms.SmsWidget';const smsWidget=__exports.smsWidget={...emojisTextField,component:SmsWidget,additionalClasses:[...(emojisTextField.additionalClasses||[]),"o_field_text","o_field_text_emojis",],};registry.category("fields").add("sms_widget",smsWidget);return __exports;});;
+
+/* /sms/static/src/core/failure_model_patch.js */
+odoo.define('@sms/core/failure_model_patch',['@mail/core/common/failure_model','@web/core/l10n/translation','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{Failure}=require("@mail/core/common/failure_model");const{_t}=require("@web/core/l10n/translation");const{patch}=require("@web/core/utils/patch");patch(Failure.prototype,{get iconSrc(){if(this.type==="sms"){return"/sms/static/img/sms_failure.svg";}
+return super.iconSrc;},get body(){if(this.type==="sms"){return _t("An error occurred when sending an SMS");}
+return super.body;},});return __exports;});;
+
+/* /sms/static/src/core/notification_model_patch.js */
+odoo.define('@sms/core/notification_model_patch',['@mail/core/common/notification_model','@web/core/l10n/translation','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{Notification}=require("@mail/core/common/notification_model");const{_t}=require("@web/core/l10n/translation");const{patch}=require("@web/core/utils/patch");patch(Notification.prototype,{get icon(){if(this.notification_type==="sms"){return"fa fa-mobile";}
+return super.icon;},get label(){if(this.notification_type==="sms"){return _t("SMS");}
+return super.label;},});return __exports;});;
+
+/* /sms/static/src/messaging_menu/messaging_menu_patch.js */
+odoo.define('@sms/messaging_menu/messaging_menu_patch',['@mail/core/web/messaging_menu','@web/core/l10n/translation','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{MessagingMenu}=require("@mail/core/web/messaging_menu");const{_t}=require("@web/core/l10n/translation");const{patch}=require("@web/core/utils/patch");patch(MessagingMenu.prototype,{openFailureView(failure){if(failure.type==="email"){return super.openFailureView(failure);}
+this.env.services.action.doAction({name:_t("SMS Failures"),type:"ir.actions.act_window",view_mode:"kanban,list,form",views:[[false,"kanban"],[false,"list"],[false,"form"],],target:"current",res_model:failure.resModel,domain:[["message_has_sms_error","=",true]],context:{create:false},});this.close();},});return __exports;});;
+
+/* /sms/static/src/thread/message_patch.js */
+odoo.define('@sms/thread/message_patch',['@mail/core/common/message','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{Message}=require("@mail/core/common/message");const{patch}=require("@web/core/utils/patch");patch(Message.prototype,{onClickFailure(){if(this.message.type==="sms"){this.env.services.action.doAction("sms.sms_resend_action",{additionalContext:{default_mail_message_id:this.message.id,},});}else{super.onClickFailure(...arguments);}},});return __exports;});;
+
+/* /crm_iap_mine/static/src/js/tours/crm_iap_lead.js */
+odoo.define('@crm_iap_mine/js/tours/crm_iap_lead',['@web/core/registry','@web/core/l10n/translation','@crm/js/tours/crm','@web/core/utils/patch','@odoo/owl'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{_t}=require("@web/core/l10n/translation");require("@crm/js/tours/crm");const{patch}=require("@web/core/utils/patch");const{markup}=require("@odoo/owl");patch(registry.category("web_tour.tours").get("crm_tour"),{steps(){const originalSteps=super.steps();const DragOppToWonStepIndex=originalSteps.findIndex((step)=>step.id==="drag_opportunity_to_won_step");originalSteps.splice(DragOppToWonStepIndex+1,0,{trigger:".o_button_generate_leads",content:markup(_t("Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool.")),position:"bottom",run:function(actions){actions.auto('.o_button_generate_leads');},},{trigger:".modal-body .o_industry",content:_t("Which Industry do you want to target?"),position:"right",},{trigger:".modal-footer button[name=action_submit]",content:_t("Now, just let the magic happen!"),position:"bottom",run:function(actions){actions.auto(".modal-footer button[special=cancel]");},});return originalSteps},});return __exports;});;
+
 /* /partner_autocomplete/static/src/js/partner_autocomplete_component.js */
 odoo.define('@partner_autocomplete/js/partner_autocomplete_component',['@web/core/autocomplete/autocomplete'],function(require){'use strict';let __exports={};const{AutoComplete}=require("@web/core/autocomplete/autocomplete");const PartnerAutoComplete=__exports.PartnerAutoComplete=class PartnerAutoComplete extends AutoComplete{static template="partner_autocomplete.PartnerAutoComplete";setup(){super.setup();this.shouldSearchWorldwide=false;}
 loadOptions(options,request){if(typeof options==="function"){return options(request,this.shouldSearchWorldwide);}else{return options;}}
@@ -15746,52 +16074,6 @@ const partnerAutoCompleteMany2one=__exports.partnerAutoCompleteMany2one={...many
 
 /* /partner_autocomplete/static/src/js/web_company_autocomplete.js */
 odoo.define('@partner_autocomplete/js/web_company_autocomplete',['@web/core/registry','@web/session'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{session}=require("@web/session");const companyAutocompleteService=__exports.companyAutocompleteService={dependencies:["orm","company"],start(env,{orm,company}){if(session.iap_company_enrich){const currentCompanyId=company.currentCompany.id;orm.silent.call("res.company","iap_enrich_auto",[currentCompanyId],{});}},};registry.category("services").add("partner_autocomplete.companyAutocomplete",companyAutocompleteService);return __exports;});;
-
-/* /sms/static/src/components/phone_field/phone_field.js */
-odoo.define('@sms/components/phone_field/phone_field',['@web/core/l10n/translation','@web/core/utils/patch','@web/views/fields/phone/phone_field','@sms/components/sms_button/sms_button'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{patch}=require("@web/core/utils/patch");const{PhoneField,phoneField,formPhoneField}=require("@web/views/fields/phone/phone_field");const{SendSMSButton}=require('@sms/components/sms_button/sms_button');patch(PhoneField,{components:{...PhoneField.components,SendSMSButton},defaultProps:{...PhoneField.defaultProps,enableButton:true,},props:{...PhoneField.props,enableButton:{type:Boolean,optional:true},},});const patchDescr=()=>({extractProps({options}){const props=super.extractProps(...arguments);props.enableButton=options.enable_sms;return props;},supportedOptions:[{label:_t("Enable SMS"),name:"enable_sms",type:"boolean",default:true,}],});patch(phoneField,patchDescr());patch(formPhoneField,patchDescr());return __exports;});;
-
-/* /sms/static/src/components/sms_button/sms_button.js */
-odoo.define('@sms/components/sms_button/sms_button',['@web/core/l10n/translation','@web/core/utils/hooks','@odoo/owl'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{useService}=require("@web/core/utils/hooks");const{Component,status}=require("@odoo/owl");const SendSMSButton=__exports.SendSMSButton=class SendSMSButton extends Component{setup(){this.action=useService("action");this.user=useService("user");this.title=_t("Send SMS Text Message");}
-get phoneHref(){return"sms:"+this.props.record.data[this.props.name].replace(/\s+/g,"");}
-async onClick(){await this.props.record.save();this.action.doAction({type:"ir.actions.act_window",target:"new",name:this.title,res_model:"sms.composer",views:[[false,"form"]],context:{...this.user.context,default_res_model:this.props.record.resModel,default_res_id:this.props.record.resId,default_number_field_name:this.props.name,default_composition_mode:"comment",},},{onClose:()=>{if(status(this)==="destroyed"){return;}
-this.props.record.load();},});}}
-SendSMSButton.template="sms.SendSMSButton";SendSMSButton.props=["*"];return __exports;});;
-
-/* /sms/static/src/components/sms_widget/fields_sms_widget.js */
-odoo.define('@sms/components/sms_widget/fields_sms_widget',['@web/core/l10n/translation','@mail/views/web/fields/emojis_text_field/emojis_text_field','@web/core/utils/hooks','@web/core/registry'],function(require){'use strict';let __exports={};const{_t}=require("@web/core/l10n/translation");const{EmojisTextField,emojisTextField,}=require("@mail/views/web/fields/emojis_text_field/emojis_text_field");const{useService}=require("@web/core/utils/hooks");const{registry}=require("@web/core/registry");const SmsWidget=__exports.SmsWidget=class SmsWidget extends EmojisTextField{setup(){super.setup();this._emojiAdded=()=>this.props.record.update({[this.props.name]:this.targetEditElement.el.value});this.notification=useService('notification');}
-get encoding(){return this._extractEncoding(this.props.record.data[this.props.name]||'');}
-get nbrChar(){const content=this._getValueForSmsCounts(this.props.record.data[this.props.name]||"");return content.length+(content.match(/\n/g)||[]).length;}
-get nbrCharExplanation(){return"";}
-get nbrSMS(){return this._countSMS(this.nbrChar,this.encoding);}
-_countSMS(nbrChar,encoding){if(nbrChar===0){return 0;}
-if(encoding==='UNICODE'){if(nbrChar<=70){return 1;}
-return Math.ceil(nbrChar/67);}
-if(nbrChar<=160){return 1;}
-return Math.ceil(nbrChar/153);}
-_extractEncoding(content){if(String(content).match(RegExp("^[@£$¥èéùìòÇ\\nØø\\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\\\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà]*$"))){return'GSM7';}
-return'UNICODE';}
-_getValueForSmsCounts(value){return value;}
-async onBlur(){var content=this.props.record.data[this.props.name]||'';if(!content.trim().length&&content.length>0){this.notification.add(_t("Your SMS Text Message must include at least one non-whitespace character"),{type:'danger'},)
-await this.props.record.update({[this.props.name]:content.trim()});}}
-async onInput(ev){super.onInput(...arguments);await this.props.record.update({[this.props.name]:this.targetEditElement.el.value});}}
-SmsWidget.template='sms.SmsWidget';const smsWidget=__exports.smsWidget={...emojisTextField,component:SmsWidget,additionalClasses:[...(emojisTextField.additionalClasses||[]),"o_field_text","o_field_text_emojis",],};registry.category("fields").add("sms_widget",smsWidget);return __exports;});;
-
-/* /sms/static/src/core/failure_model_patch.js */
-odoo.define('@sms/core/failure_model_patch',['@mail/core/common/failure_model','@web/core/l10n/translation','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{Failure}=require("@mail/core/common/failure_model");const{_t}=require("@web/core/l10n/translation");const{patch}=require("@web/core/utils/patch");patch(Failure.prototype,{get iconSrc(){if(this.type==="sms"){return"/sms/static/img/sms_failure.svg";}
-return super.iconSrc;},get body(){if(this.type==="sms"){return _t("An error occurred when sending an SMS");}
-return super.body;},});return __exports;});;
-
-/* /sms/static/src/core/notification_model_patch.js */
-odoo.define('@sms/core/notification_model_patch',['@mail/core/common/notification_model','@web/core/l10n/translation','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{Notification}=require("@mail/core/common/notification_model");const{_t}=require("@web/core/l10n/translation");const{patch}=require("@web/core/utils/patch");patch(Notification.prototype,{get icon(){if(this.notification_type==="sms"){return"fa fa-mobile";}
-return super.icon;},get label(){if(this.notification_type==="sms"){return _t("SMS");}
-return super.label;},});return __exports;});;
-
-/* /sms/static/src/messaging_menu/messaging_menu_patch.js */
-odoo.define('@sms/messaging_menu/messaging_menu_patch',['@mail/core/web/messaging_menu','@web/core/l10n/translation','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{MessagingMenu}=require("@mail/core/web/messaging_menu");const{_t}=require("@web/core/l10n/translation");const{patch}=require("@web/core/utils/patch");patch(MessagingMenu.prototype,{openFailureView(failure){if(failure.type==="email"){return super.openFailureView(failure);}
-this.env.services.action.doAction({name:_t("SMS Failures"),type:"ir.actions.act_window",view_mode:"kanban,list,form",views:[[false,"kanban"],[false,"list"],[false,"form"],],target:"current",res_model:failure.resModel,domain:[["message_has_sms_error","=",true]],context:{create:false},});this.close();},});return __exports;});;
-
-/* /sms/static/src/thread/message_patch.js */
-odoo.define('@sms/thread/message_patch',['@mail/core/common/message','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{Message}=require("@mail/core/common/message");const{patch}=require("@web/core/utils/patch");patch(Message.prototype,{onClickFailure(){if(this.message.type==="sms"){this.env.services.action.doAction("sms.sms_resend_action",{additionalContext:{default_mail_message_id:this.message.id,},});}else{super.onClickFailure(...arguments);}},});return __exports;});;
 
 /* /snailmail/static/src/core/failure_model_patch.js */
 odoo.define('@snailmail/core/failure_model_patch',['@mail/core/common/failure_model','@web/core/l10n/translation','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{Failure}=require("@mail/core/common/failure_model");const{_t}=require("@web/core/l10n/translation");const{patch}=require("@web/core/utils/patch");patch(Failure.prototype,{get iconSrc(){if(this.type==="snail"){return"/snailmail/static/img/snailmail_failure.png";}
@@ -23286,7 +23568,8 @@ return __exports;});
                             <span class="btn btn-link text-action p-0 me-3"><i t-attf-class="fa {{ activity.icon }}"/><t t-out="' ' + activity.display_name"/></span>
                         </t>
                     </FileUploader>
-                    <span class="o-mail-Activity-edit btn btn-link text-action p-0 me-3" t-on-click="edit"><i class="fa fa-pencil"/> Edit</span>
+                    <span class="o-mail-Activity-edit btn btn-link text-action p-0 me-3" t-on-click="edit" t-if="!activity.calendar_event_id"><i class="fa fa-pencil"/> Edit</span>
+            <span t-if="activity.calendar_event_id" class="btn btn-link p-0 me-3" t-on-click="onClickReschedule"><i class="fa fa-calendar"/> Reschedule</span>
                     <span class="btn btn-link btn-danger p-0" t-on-click="unlink"><i class="fa fa-times"/> Cancel</span>
                 </t>
             </div>
@@ -23355,6 +23638,9 @@ return __exports;});
                 <button t-if="hasEditButton" class="o-mail-ActivityListPopoverItem-editbtn btn btn-sm btn-success btn-link" t-on-click="onClickEditActivityButton">
                     <i class="fa fa-pencil"/>
                 </button>
+            <button t-if="props.activity.calendar_event_id" class="o-mail-ActivityListPopoverItem-editbtn btn btn-sm btn-success btn-link" t-on-click="onClickReschedule">
+                <i class="fa fa-calendar"/>
+            </button>
                 <t t-if="props.activity.can_write">
                     <FileUploader t-if="hasFileUploader" onUploaded.bind="onFileUploaded">
                         <t t-set-slot="toggler">
@@ -23447,6 +23733,21 @@ return __exports;});
                             <img alt="Activity" t-att-src="group.icon"/>
                             <div class="flex-grow-1 overflow-hidden">
                                 <div class="d-flex px-2" name="activityTitle" t-out="group.name"/>
+            <div t-if="group.type === 'meeting'">
+                <t t-set="is_next_meeting" t-value="true"/>
+                <t t-foreach="group.meetings" t-as="meeting" t-key="meeting.id">
+                    <div class="o-calendar-meeting d-flex px-2">
+                        <span class="flex-grow-1 text-truncate" t-att-class="!meeting.allday and is_next_meeting ? 'fw-bold' : ''" t-esc="meeting.name"/>
+                        <span t-if="meeting.formattedStart">
+                            <t t-if="meeting.allday">All Day</t>
+                            <t t-else="">
+                                <t t-set="is_next_meeting" t-value="false"/>
+                                <t t-esc="meeting.formattedStart"/>
+                            </t>
+                        </span>
+                    </div>
+                </t>
+            </div>
                                 <div t-if="group.type === 'activity'" class="d-flex">
                                     <span t-attf-class="#{group.overdue_count ? 'btn btn-link' : 'text-muted'} py-0 px-2 text-truncate" t-on-click.stop="() =&gt; this.openActivityGroup(group, 'overdue')">
                                         <t t-out="group.overdue_count"/> Late
@@ -26451,7 +26752,381 @@ return __exports;});
             </tbody>
         </table>
     </t>
-<t t-name="ImportAction">
+<t t-name="calendar.CalendarConnectProvider">
+        <a role="button" title="Connect" class="o_calendar_activate_external_cal btn btn-primary" t-on-click="onConnect">Connect</a>
+    </t>
+<t t-name="calendar.AskRecurrenceUpdatePolicyDialog">
+        <t t-set="edit_recurrent_event">Edit Recurrent event</t>
+        <Dialog size="'sm'" title="edit_recurrent_event">
+            <t t-foreach="Object.entries(possibleValues)" t-as="value" t-key="value[0]">
+                <t t-set="name" t-value="value[0]"/>
+                <t t-set="state" t-value="value[1]"/>
+                <div class="form-check o_radio_item">
+                    <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" t-att-checked="state.checked" t-att-value="name" t-att-id="name" t-on-click="(ev) =&gt; this.selected = ev.target.value"/>
+                    <label class="form-check-label o_form_label" t-att-for="name" t-esc="state.label"/>
+                </div>
+            </t>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="confirm">
+                    Confirm
+                </button>
+            </t>
+        </Dialog>
+    </t>
+<t t-name="calendar.AttendeeCalendarController">
+        <div t-att-class="className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
+                <t t-set-slot="layout-actions">
+                    <SearchBar t-if="searchBarToggler.state.showSearchBar"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t>
+                <div class="o_calendar_container d-flex d-md-grid flex-column h-100 bg-view">
+                    <div class="o_calendar_header d-flex align-items-center gap-1 px-3 py-2 border-bottom">
+                        <div t-if="!env.isSmall" class="o_calendar_navigation_buttons btn-group">
+                            <button class="o_calendar_button_prev btn btn-secondary d-none d-md-block" title="Previous" aria-label="Previous" t-on-click.stop="() =&gt; this.setDate('previous')"><i class="oi oi-arrow-left"/></button>
+                            <button class="o_calendar_button_next btn btn-secondary d-none d-md-block" title="Next" aria-label="Next" t-on-click.stop="() =&gt; this.setDate('next')"><i class="oi oi-arrow-right"/></button>
+                        </div>
+                        <ViewScaleSelector scales="scales" currentScale="model.scale" isWeekendVisible="state.isWeekendVisible" setScale.bind="setScale" toggleWeekendVisibility.bind="toggleWeekendVisibility" dropdownClass="'order-3 order-lg-0'"/>
+                        <button class="btn btn-secondary o_calendar_button_today order-2 order-lg-0 ms-auto ms-lg-0" t-att-class="env.isSmall ? 'btn-sm btn-light' : 'btn-secondary'" t-on-click.stop="() =&gt; this.setDate('today')">   <span t-if="env.isSmall" class="position-relative pt-1"><t t-esc="today"/><i class="fa fa-calendar-o position-absolute top-50 start-50 translate-middle fs-1"/></span>
+                            <t t-else="">Today</t>
+                        </button>
+                        <h5 class="d-inline-flex ms-lg-2 mb-0">
+                            <t t-if="model.meta.scale === 'year'">
+                                <t t-esc="currentYear"/>
+                            </t>
+                            <t t-elif="model.meta.scale === 'month'">
+                                <t t-esc="currentMonth"/>
+                            </t>
+                            <t t-elif="model.meta.scale === 'week'">
+                                <t t-esc="weekHeader"/> <span t-if="model.meta.scale === 'week'" class="badge bg-100 rounded px-1 ms-1">Week <t t-esc="currentWeek"/></span>
+                            </t>
+                            <t t-else="">
+                                <t t-esc="dayHeader"/>
+                            </t>
+                        </h5>
+                        <button class="btn btn-light d-none d-md-block order-4 oi oi-panel-right ms-lg-auto collapsed lh-base" t-on-click="toggleSideBar"/>
+                    </div>
+                    <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps"/>
+                    <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps"/>
+                    <div t-if="showSideBar" class="o_calendar_sidebar_container col-auto overflow-x-hidden overflow-y-auto">
+                        <div class="o_calendar_sidebar">
+                            <DatePicker t-if="!env.isSmall" t-props="datePickerProps"/>
+                            <FilterPanel t-props="filterPanelProps"/>
+                        </div>
+                    </div>
+                </div>
+            <t t-set-slot="control-panel-create-button">
+                <button class="btn btn-primary o-calendar-button-new me-1" t-on-click="onClickAddButton">New</button>
+            </t>
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarCommonPopover.body">
+        <ul class="list-group list-group-flush">
+            <li t-if="date" class="list-group-item">
+                <i class="fa fa-fw fa-calendar text-400"/>
+                <span class="fw-bold ms-2" t-esc="date"/> <small t-if="dateDuration != 'All day'"><b t-esc="dateDuration"/></small>
+            </li>
+            <li t-if="time" class="list-group-item">
+                <i class="fa fa-fw fa-clock-o text-400"/>
+                <span class="fw-bold ms-2" t-esc="time"/> <small t-if="timeDuration"><b t-esc="\`(\${timeDuration})\`"/></small>
+            </li>
+        </ul>
+        <ul class="list-group list-group-flush o_cw_popover_fields_secondary" t-if="isEventDetailsVisible">
+            <Record resModel="props.model.resModel" resId="props.record.id" fields="props.model.fields" activeFields="activeFields" mode="'readonly'" values="props.record.rawRecord" t-slot-scope="slot">
+                <t t-foreach="Object.keys(props.model.popoverFieldNodes)" t-as="fieldId" t-key="fieldId">
+                    <t t-set="fieldInfo" t-value="props.model.popoverFieldNodes[fieldId]"/>
+                    <t t-set="fieldType" t-value="props.model.fields[fieldId].type"/>
+                    <t t-if="!isInvisible(fieldInfo, slot.record)">
+                        <li class="list-group-item d-flex text-nowrap align-items-center" t-att-class="fieldInfo.attrs.class" t-att-data-tooltip="fieldType === 'html' ? '' : getFormattedValue(fieldId, slot.record)">
+                            <span class="fw-bold me-2" t-if="!fieldInfo.options.noLabel">
+                                <t t-if="fieldInfo.options.icon">
+                                    <i t-attf-class="fa-fw {{fieldInfo.options.icon}} text-400"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-esc="fieldInfo.string"/>
+                                </t>
+                            </span>
+                            <div class="flex-grow-1 o_cw_popover_field overflow-hidden" t-if="!fieldInfo.options.shouldOpenRecord">
+                                <Field name="fieldInfo.name" record="slot.record" fieldInfo="fieldInfo" type="fieldInfo.widget"/>
+                            </div>
+            <t t-if="fieldInfo.options.shouldOpenRecord">
+                <a href="#" t-on-click="onClickOpenRecord">
+                    <t t-out="props.record.rawRecord.res_model_name"/>
+                </a>
+        </t>
+                        </li>
+                    </t>
+                </t>
+            </Record>
+        </ul>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarCommonPopover.footer">
+        <t t-if="isEventEditable">
+            <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">Edit</a>
+        </t>
+            <t t-elif="isEventViewable">
+                <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">View</a>
+            </t>
+        <t t-if="isEventDeletable">
+            <a href="#" class="btn btn-secondary o_cw_popover_delete" t-on-click="onDeleteEvent">Delete</a>
+        </t>
+            <a t-if="isEventArchivable and isEventDetailsVisible" href="#" class="btn btn-secondary o_cw_popover_archive_g" t-on-click="onClickArchive">Delete</a>
+            <t t-if="displayAttendeeAnswerChoice">
+                <div class="btn-group w-100 w-lg-auto ms-lg-auto order-first order-lg-0 px-2 px-lg-0">
+                    <button class="btn" t-attf-class="#{selectedStatusInfo.text === 'Yes' ? 'btn-secondary active' : 'btn-outline-secondary'}" t-on-click="() =&gt; this.changeAttendeeStatus('accepted')">Yes</button>
+                    <button class="btn" t-attf-class="#{selectedStatusInfo.text === 'No' ? 'btn-secondary active' : 'btn-outline-secondary'}" t-on-click="() =&gt; this.changeAttendeeStatus('declined')">No</button>
+                    <button class="btn" t-attf-class="#{selectedStatusInfo.text === 'Maybe' ? 'btn-secondary active' : 'btn-outline-secondary'}" t-on-click="() =&gt; this.changeAttendeeStatus('tentative')">Maybe</button>
+                </div>
+            </t>
+    </t>
+
+<t t-name="calendar.AttendeeCalendarCommonRenderer.event">
+        <div class="fc-content" t-att-class="isMonth ? 'd-flex gap-1 text-truncate' : ''">
+            <span t-if="!isTimeHidden and isMonth" class="d-none d-lg-inline fc-time fw-normal" t-esc="startTime"/>
+            <div t-attf-class="o_event_title text-truncate">
+                <i t-if="isAlone" class="fa fa-exclamation-circle align-self-top me-1" data-tooltip="You're alone in this meeting"/>
+                <span t-esc="title" t-attf-class="#{(attendeeStatus == 'accepted' || rawRecord.is_highlighted)  ? 'fw-bolder' : ''}"/>
+                    <t t-if="!isAllDay and !isMonth and !isSmall">
+                        <t t-if="24 &gt; duration and duration &gt; 0.5">
+                            <br/><span class="fw-normal mt-1"><t t-esc="startTime"/> - <t t-esc="endTime"/></span>
+                        </t>
+                        <t t-else="">
+                            , <t t-esc="startTime"/>
+                        </t>
+                    </t>
+            </div>
+        </div>
+    </t>
+<t t-name="calendar.AttendeeCalendarYearPopover.body">
+        <div t-foreach="recordGroups" t-as="recordGroup" t-key="recordGroup.title">
+            <h5 t-out="recordGroup.title"/>
+            <t t-foreach="recordGroup.records" t-as="record" t-key="record._recordId">
+                <t t-call="{{ constructor.subTemplates.record }}"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="calendar.CalendarQuickCreateButtons">
+        <div class="o_cp_buttons d-flex align-items-baseline w-100" role="toolbar" aria-label="Main actions" t-ref="cpButtons">
+            <div t-if="model.root.isInEdition" class="o_form_buttons_edit d-flex gap-1">
+                <button class="btn btn-primary o_form_button_save" t-on-click="saveButtonClicked" data-hotkey="c">Save &amp; Close</button>
+    <button type="button" class="btn btn-secondary o_form_button_cancel" data-hotkey="j" t-on-click.stop="discard">
+                    Discard
+                </button>
+            <button class="btn btn-link ms-auto" t-on-click="goToFullEvent">More Options</button>
+                <button t-if="props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="props.removeRecord" data-hotkey="x">
+                    Remove
+                </button>
+            </div>
+            <div t-elif="canCreate" class="o_form_buttons_view">
+                <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
+                    New
+                </button>
+            </div>
+        </div>
+    </t>
+<t t-name="calendar.AttendeeTagsList">
+        <t t-foreach="visibleTags" t-as="tag" t-key="tag.id or tag_index">
+            <span class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100" t-att-class="{                     'o_avatar opacity-trigger-hover' : tag.img,                     'o_badge badge rounded-pill lh-1': !tag.img,                 }" t-attf-class="{{ !tag.img ? 'o_tag_color_' + (tag.colorIndex ? tag.colorIndex : '0') : '' }}" tabindex="-1" t-att-data-color="tag.colorIndex" t-att-title="tag.text" t-on-click="(ev) =&gt; tag.onClick and tag.onClick(ev)" t-on-keydown="tag.onKeydown">
+
+
+                <span t-if="tag.img and props.displayText and tag.onDelete" class="o_avatar_backdrop position-absolute top-0 end-0 bottom-0 start-0 ms-n2 mt-n1 mb-n1 bg-view rounded border shadow opacity-0"/>
+
+                <div class="o_attendee_tags_list">
+                <img t-if="tag.img" t-att-src="tag.img" class="o_avatar o_m2m_avatar position-relative rounded" t-att-class="tag.imageClass"/>
+                <div t-if="tag.status &amp;&amp; tag.statusIcon" t-attf-class="attendee_tag_status o_attendee_status_{{tag.status}} fa fa-fw {{tag.statusIcon}} rounded-circle"/>
+            </div>
+        <i t-if="tag.icon" t-attf-class="p-1 fa {{ tag.icon }}" t-att-class="tag.className"/>
+
+                <div t-if="props.displayText" class="o_tag_badge_text text-truncate" t-att-class="{'position-relative ms-1' : tag.img}" t-out="tag.text"/>
+
+                <a t-if="tag.onDelete" t-on-click.stop.prevent="(ev) =&gt; tag.onDelete and tag.onDelete(ev)" class="o_delete d-flex align-items-center opacity-100-hover" t-att-class="{                             'btn btn-link position-relative py-0 px-1 text-danger opacity-0': tag.img,                             'ps-1 opacity-75': !tag.img                         }" title="Delete" aria-label="Delete" tabIndex="-1" href="#">
+                        <i class="oi oi-close align-text-top"/>
+                </a>
+            </span>
+        </t>
+        <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded-circle fw-bold" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo">
+            <span t-if="otherTags.length &gt; 9" t-esc="'9+'"/>
+            <span t-else="" t-esc="'+' + otherTags.length"/>
+        </span>
+    </t>
+
+    <t t-name="calendar.Many2ManyAttendee">
+        <div class="many2many_tags_avatar_field_container o_field_tags d-inline-flex flex-wrap mw-100 gap-1 flex-column" t-att-class="{'o_tags_input o_input': !props.readonly}" t-ref="many2ManyTagsField">
+            <TagsList tags="tags" itemsVisible="itemsVisible"/>
+            <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
+                <Many2XAutocomplete id="props.id" placeholder="props.placeholder" resModel="relation" autoSelect="true" fieldString="string" activeActions="activeActions" update="update" quickCreate="activeActions.create ? quickCreate : null" context="props.context" getDomain.bind="getDomain" isToMany="true"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="calendar.Many2ManyAttendeeExpandable">
+        <div class="many2many_tags_avatar_field_container o_field_tags d-inline-flex flex-wrap gap-1 w-100" t-att-class="{'o_tags_input o_input': !props.readonly}" t-ref="many2ManyTagsField">
+            <t t-if="tags.length &gt; 5">
+                <div class="d-flex w-100">
+                    <div class="flex-grow-1">
+                        <strong><t t-out="attendeesCount"/> attendees</strong>
+                        <br/><t t-out="acceptedCount"/> accepted
+                        <br/><t t-out="declinedCount"/> declined
+                        <br/><t t-out="uncertainCount"/> uncertain
+                    </div>
+                    <i role="button" t-on-click="onExpanderClick" t-att-class="state.expanded ? 'oi oi-chevron-up' : 'oi oi-chevron-down'"/>
+                </div>
+            </t>
+            <t t-if="!state.expanded &amp;&amp; tags.length &gt; 10"> </t>
+            <t t-else=""><TagsList tags="tags" itemsVisible="state.expanded ? tags.length : 5"/>
+            </t>
+        <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
+                <Many2XAutocomplete id="props.id" placeholder="tags.length ? '' : props.placeholder" resModel="relation" autoSelect="true" fieldString="string" activeActions="activeActions" update="update" quickCreate="activeActions.create ? quickCreate : null" context="props.context" getDomain.bind="getDomain" isToMany="true"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="calendar.WeekDays">
+        <div class="o_recurrent_weekdays mb-2 d-flex">
+        <t t-foreach="weekdays" t-as="day" t-key="day">
+                <div t-attf-class="o_calendar_week_days_rounded {{data[day] ? 'text-bg-action' : 'btn-secondary'}}" t-on-click="this.props.readonly? () =&gt; {} : () =&gt; this.onChange(day)">
+                    <t t-esc="props.record.fields[day].string[0]"/>
+                </div>
+            </t>
+        </div>
+    </t>
+<t t-name="crm.ColumnProgress">
+        <div class="o_column_progress progress bg-300 w-50">
+            <t t-set="maxWidth" t-value="100 - Math.max(0, props.progressBar.bars.filter(x =&gt; x.count &gt; 0).length - 1) * 5"/>
+            <t t-foreach="props.progressBar.bars" t-as="bar" t-key="bar.value">
+                <t t-set="progressWidth" t-value="Math.max(5, bar.count / (props.group.count or 1) * 100)"/>
+                <div t-if="bar.count &gt; 0" role="progressbar" class="progress-bar o_bar_has_records cursor-pointer" t-att-class="{ 'progress-bar-animated progress-bar-striped': props.progressBar.activeBar === bar.value, 'border border-white': !props.group.isFolded and props.progressBar.activeBar }" t-attf-class="bg-{{ bar.color }}" t-attf-style="width: {{ Math.min(progressWidth, maxWidth) }}%;" aria-valuemin="0" t-att-aria-valuemax="props.group.count" t-att-aria-valuenow="bar.count" aria-label="Progress bar" t-attf-data-tooltip="{{ bar.count }} {{ bar.string }}" data-tooltip-delay="0" t-on-click="() =&gt; this.onBarClick(bar)"/>
+            </t>
+        </div>
+        <AnimatedNumber value="props.aggregate.value" title="props.aggregate.title" duration="1000" currency="props.aggregate.currency" animationClass="props.aggregate.value &gt; 999 ? 'o_animated_grow' : 'o_animated_grow_huge'"/>
+            <t t-if="showRecurringRevenue">
+                <t t-set="rrmAggregate" t-value="getRecurringRevenueGroupAggregate(props.group)"/>
+                <AnimatedNumber value="rrmAggregate.value" title="rrmAggregate.title" duration="1000" currency="props.aggregate.currency" animationClass="'o_animated_grow_huge'">
+                    <t t-set-slot="prefix">
+                        <strong>+</strong>
+                    </t>
+                </AnimatedNumber>
+            </t>
+    </t>
+
+<t t-name="crm.CrmKanbanHeader">
+        <div class="o_kanban_header position-sticky top-0 z-index-1" t-ref="root" t-attf-class="{{ !env.isSmall and group.isFolded ? 'pt-2' : 'py-2' }}">
+            <div class="o_kanban_header_title position-relative d-flex lh-lg">
+                <div t-if="group.isFolded" class="o_column_title d-flex align-items-center pt-1 fs-4 lh-1 text-nowrap opacity-50 opacity-100-hover flex-grow-1" t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave">
+                    <t t-esc="groupName"/>
+                    <span class="badge text-bg-500 rounded-pill lh-1 ms-2" t-esc="group.count"/>
+                </div>
+                <span t-if="!group.isFolded" t-esc="groupName" class="o_column_title flex-grow-1 d-inline-block mw-100 text-truncate fs-4 fw-bold align-top text-900" t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave"/>
+                <t t-if="env.isSmall or !group.isFolded">
+                    <Dropdown class="'o_kanban_config'" togglerClass="'btn px-2'" position="'bottom-end'" container="() =&gt; this._configDropdownContainer">
+                        <t t-set-slot="toggler">
+                            <i class="fa fa-gear opacity-50 opacity-100-hover" role="img" aria-label="Settings" title="Settings"/>
+                        </t>
+                        <t t-foreach="configItems" t-as="item" t-key="item.key">
+                            <DropdownItem t-if="item.isVisible" class="item.class" onSelected="() =&gt; this[item.method]()">
+                                <t t-esc="item.label"/>
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                    <button t-if="canQuickCreate()" class="o_kanban_quick_add btn pe-2 me-n2" t-on-click="() =&gt; this.quickCreate()">
+                        <i class="fa fa-plus opacity-75 opacity-100-hover" role="img" aria-label="Quick add" title="Quick add"/>
+                    </button>
+                </t>
+                <button t-else="" class="o_column_unfold btn d-flex align-items-center justify-content-between flex-nowrap pt-2 pb-3 transition-base">
+                    <i class="fa fa-caret-left lh-lg transition-base" role="img" aria-label="Unfold" title="Unfold"/>
+                    <i class="fa fa-caret-right lh-lg" role="img" aria-label="Unfold" title="Unfold"/>
+                </button>
+            </div>
+            <div t-if="(env.isSmall or !group.isFolded) and progressBar" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !group.count }">
+                <ColumnProgress group="group" progressBar="progressBar" aggregate="groupAggregate" onBarClicked.bind="onBarClicked" progressBarState="props.progressBarState"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="crm.ForecastKanbanRenderer">
+        <div class="o_kanban_renderer o_renderer d-flex" t-attf-class="{{ props.list.isGrouped ? 'o_kanban_grouped align-content-stretch' : 'o_kanban_ungrouped align-content-start flex-wrap justify-content-start' }}" t-ref="root">
+            <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">
+                <t t-if="groupOrRecord.group">
+                    <t t-set="group" t-value="groupOrRecord.group"/>
+                    <t t-set="isGroupProcessing" t-value="isProcessing(group.id)"/>
+                    <div class="o_kanban_group flex-shrink-0 flex-grow-1 flex-md-grow-0" t-att-class="getGroupClasses(group, isGroupProcessing)" t-attf-class="{{ !env.isSmall and group.isFolded ? 'opacity-trigger-hover' : '' }}" t-att-data-id="group.id" t-on-click="(ev) =&gt; this.onGroupClick(group, ev)">
+                        <KanbanHeader activeActions="props.archInfo.activeActions" canQuickCreate="props.canQuickCreate" deleteGroup="(group) =&gt; this.deleteGroup(group)" dialogClose="dialogClose" group="group" list="props.list" quickCreateState="props.quickCreateState" scrollTop="props.scrollTop" tooltipInfo="props.archInfo.tooltipInfo" progressBarState="props.progressBarState"/>
+                        <t t-if="!group.isFolded">
+                            <t t-if="group.id === props.quickCreateState.groupId">
+                                <KanbanRecordQuickCreate group="group" onCancel="force =&gt; this.cancelQuickCreate(force)" onValidate="(record, mode) =&gt; this.validateQuickCreate(record, mode, group)" quickCreateView="props.quickCreateState.view"/>
+                            </t>
+                            <t t-foreach="group.list.records" t-as="record" t-key="record.id">
+                                <KanbanRecord archInfo="props.archInfo" Compiler="props.Compiler" canResequence="!isGroupProcessing and !isProcessing(record.id) and canResequenceRecords" forceGlobalClick="props.forceGlobalClick" group="group" list="props.list" deleteRecord="props.deleteRecord" openRecord="props.openRecord" readonly="props.readonly" record="record" templates="props.archInfo.templateDocs" progressBarState="props.progressBarState"/>
+                            </t>
+                            <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)"/>
+                            <div t-if="unloadedCount &gt; 0" class="o_kanban_load_more">
+                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() =&gt; this.loadMore(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
+                            </div>
+                        </t>
+                        <t t-elif="env.isSmall">
+                            <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)"/>
+                            <div t-if="unloadedCount &gt; 0" class="o_kanban_load_more">
+                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() =&gt; this.toggleGroup(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <KanbanRecord archInfo="props.archInfo" Compiler="props.Compiler" canResequence="!isProcessing(groupOrRecord.record.id) and canResequenceRecords" forceGlobalClick="props.forceGlobalClick" list="props.list" deleteRecord="props.deleteRecord" openRecord="props.openRecord" readonly="props.readonly" record="groupOrRecord.record" templates="props.archInfo.templateDocs"/>
+                </t>
+            </t>
+            <t t-if="props.list.isGrouped">
+                <t t-if="canCreateGroup()">
+                    <t t-if="isGroupedByForecastField()">
+                <ForecastKanbanColumnQuickCreate folded="true" onFoldChange="() =&gt; {}" onValidate.bind="addForecastColumn" exampleData="exampleData" groupByField="props.list.groupByField"/>
+            </t>
+            <t t-else=""><KanbanColumnQuickCreate folded="state.columnQuickCreateIsFolded" onFoldChange="folded =&gt; state.columnQuickCreateIsFolded = props.list.groups.length &gt; 0 and folded" onValidate="props.list.createGroup.bind(props.list)" exampleData="exampleData" groupByField="props.list.groupByField"/>
+
+                    </t>
+        <div t-if="props.list.groups.length === 0" class="o_kanban_example_background_container d-flex opacity-50">
+                        <div class="o_kanban_example_background flex-grow-1">
+                            <div class="o_kanban_examples d-flex p-2">
+                                <div t-foreach="ghostColumns" t-as="column" t-key="column.name" class="o_kanban_examples_group flex-grow-1 m-3">
+                                    <h6><b t-esc="column.name"/></h6>
+                                    <div t-foreach="column.cards" t-as="card" t-key="card_index" class="o_kanban_examples_ghost d-flex flex-wrap justify-content-between mb-3 p-2 border bg-light">
+                                        <div class="o_ghost_content w-100 pb-3 bg-300"/>
+                                        <div class="o_ghost_content o_ghost_tag d-inline-block w-50 mt-3 pb-3 bg-300"/>
+                                        <span class="mt-2 rounded-circle bg-300">
+                                            <img class="o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+
+                <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost flex-grow-1 flex-md-shrink-1 flex-shrink-0 my-0"/>
+            </t>
+            <t t-if="showNoContentHelper">
+                <t t-if="props.noContentHelp" t-call="web.ActionHelper">
+                    <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+                </t>
+                <t t-else="" t-call="web.NoContentHelper"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="ImportAction">
         <div class="h-100 d-flex flex-column">
             <Layout className="'o_import_action d-flex h-100 overflow-auto'" display="display">
                 <t t-set-slot="control-panel-create-button">
@@ -26788,6 +27463,31 @@ return __exports;});
             </div>
         </Dialog>
     </t>
+<t t-name="sms.SendSMSButton">
+        <a t-att-title="title" t-att-href="phoneHref" t-on-click.prevent.stop="onClick" class="ms-3 d-inline-flex align-items-center o_field_phone_sms"><i class="fa fa-mobile"/><small class="fw-bold ms-1">SMS</small></a>
+    </t>
+
+<t t-name="sms.SmsWidget">
+        <t t-if="props.readonly">
+            <span t-esc="props.record.data[props.name] or ''" t-ref="targetReadonlyElement"/>
+        </t>
+        <t t-else="">
+            <div t-ref="div">
+                <textarea class="o_input" t-att-class="{'o_field_translate': isTranslatable}" t-att-id="props.id" t-att-placeholder="props.placeholder" t-att-rows="rowCount" t-ref="textarea" t-on-blur="onBlur"/>
+            <t t-call="mail.EmojisFieldButton"/>
+                <t t-if="isTranslatable">
+                    <TranslationButton fieldName="props.name" record="props.record"/>
+                </t>
+            </div>
+        </t>
+            <div class="o_sms_container">
+                <span class="text-muted o_sms_count">
+                    <t t-out="nbrChar"/> characters<t t-out="nbrCharExplanation"/>, fits in <t t-out="nbrSMS"/> SMS (<t t-out="encoding"/>)
+                    <a href="https://iap-services.odoo.com/iap/sms/pricing" target="_blank" title="SMS Pricing" aria-label="SMS Pricing" class="fa fa-lg fa-info-circle"/>
+                </span>
+            </div>
+    </t>
+
 <t t-name="partner_autocomplete.PartnerAutoComplete">
         <div class="o-autocomplete" t-ref="root" t-att-class="autoCompleteRootClass">
             <input type="text" t-att-id="props.id" class="o-autocomplete--input o_input" autocomplete="off" t-att-placeholder="props.placeholder" role="combobox" t-att-aria-activedescendant="activeSourceOptionId" t-att-aria-expanded="displayOptions ? 'true' : 'false'" aria-autocomplete="list" aria-haspopup="listbox" t-model="state.value" t-on-blur="onInputBlur" t-on-click="onInputClick" t-on-change="onInputChange" t-on-input="onInput" t-on-keydown="onInputKeydown" t-on-focus="onInputFocus" t-ref="input"/>
@@ -26871,31 +27571,6 @@ return __exports;});
             <a class="btn btn-link" t-att-href="account_url"><i class="oi oi-arrow-right"/> Set Your Account Token</a>
         </div>
     </t>
-<t t-name="sms.SendSMSButton">
-        <a t-att-title="title" t-att-href="phoneHref" t-on-click.prevent.stop="onClick" class="ms-3 d-inline-flex align-items-center o_field_phone_sms"><i class="fa fa-mobile"/><small class="fw-bold ms-1">SMS</small></a>
-    </t>
-
-<t t-name="sms.SmsWidget">
-        <t t-if="props.readonly">
-            <span t-esc="props.record.data[props.name] or ''" t-ref="targetReadonlyElement"/>
-        </t>
-        <t t-else="">
-            <div t-ref="div">
-                <textarea class="o_input" t-att-class="{'o_field_translate': isTranslatable}" t-att-id="props.id" t-att-placeholder="props.placeholder" t-att-rows="rowCount" t-ref="textarea" t-on-blur="onBlur"/>
-            <t t-call="mail.EmojisFieldButton"/>
-                <t t-if="isTranslatable">
-                    <TranslationButton fieldName="props.name" record="props.record"/>
-                </t>
-            </div>
-        </t>
-            <div class="o_sms_container">
-                <span class="text-muted o_sms_count">
-                    <t t-out="nbrChar"/> characters<t t-out="nbrCharExplanation"/>, fits in <t t-out="nbrSMS"/> SMS (<t t-out="encoding"/>)
-                    <a href="https://iap-services.odoo.com/iap/sms/pricing" target="_blank" title="SMS Pricing" aria-label="SMS Pricing" class="fa fa-lg fa-info-circle"/>
-                </span>
-            </div>
-    </t>
-
 <t t-name="snailmail.SnailmailError">
         <Dialog contentClass="'o-snailmail-SnailmailError'" title="title">
             <t t-if="props.failureType === 'sn_credit'">

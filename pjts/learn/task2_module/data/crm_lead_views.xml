@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="crm_lead_kanban_modify" model="ir.ui.view">
+            <field name="name">crm.lead.view.kanban.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <div>
+                        Days at work:
+                        <field name="days_in_the_work"/>
+
+                    </div>
+                    <div>
+                        Client Risk Level:
+                        <field name="client_risk_level_name"/>
+
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_tree_modify" model="ir.ui.view">
+            <field name="name">crm.lead.view.tree.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='city']" position="after">
+                    <field name="days_in_the_work" string="Days at work"/>
+                    <field name="client_risk_level_name" string="Client Risk Level"/>
+                </xpath>
+            </field>
+        </record>
+
+         <record id="crm_lead_form_modify" model="ir.ui.view">
+            <field name="name">crm.lead.view.form.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                  <button name="action_set_client_risk_level" string="Set Risk Level"
+                            type="object" class="oe_highlight"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

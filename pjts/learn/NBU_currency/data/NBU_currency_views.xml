@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="parse_nbu_eur_rate" model="ir.actions.act_window">
+        <field name="name">NBU EUR</field>
+        <field name="res_model">res.currency</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+</odoo>
