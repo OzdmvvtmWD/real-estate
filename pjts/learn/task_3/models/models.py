@@ -20,4 +20,4 @@ class CustomersCredit(models.Model):
     @api.depends('credits_sum', 'credits_percent')
     def _compute_credits_percent_sum(self):
         for record in self:
-            record.credits_percent_sum = record.credits_sum * record.credits_percent
+            record.credits_percent_sum = record.credits_sum * record.credits_percent / 100

@@ -32,7 +32,7 @@
             <pivot string="Customer's Credits Pivot">
                 <field name="credits_percent_sum" type="measure"/>
                 <field name="partner_id" type="row"/>
-<!--                <field name="credits_percent" type="row"/>-->
+                <field name="credits_percent" type="measure"/>
                 <field name="credits_sum" type="measure"/>
             </pivot>
         </field>
