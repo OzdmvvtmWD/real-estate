@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem id="customer_credits_root_menu" name="Customer Credits Menu">
+        <menuitem id="customer_credits_menu" name="Customer Credits" action="customer_credits_action"/>
+    </menuitem>
+</odoo>

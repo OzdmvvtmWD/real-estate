@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--    <record id="paperformat_frenchcheck" model="report.paperformat">-->
+<!--        <field name="name">French Bank Check</field>-->
+<!--        <field name="header_spacing">100</field>-->
+<!--        <field name="default" eval="True"/>-->
+<!--        <field name="format">custom</field>-->
+<!--        <field name="page_height">80</field>-->
+<!--        <field name="page_width">175</field>-->
+<!--        <field name="orientation">Portrait</field>-->
+<!--        <field name="margin_top">3</field>-->
+<!--        <field name="margin_bottom">3</field>-->
+<!--        <field name="margin_left">3</field>-->
+<!--        <field name="margin_right">3</field>-->
+<!--        <field name="header_line" eval="False"/>-->
+<!--        <field name="header_spacing">3</field>-->
+<!--        <field name="dpi">80</field>-->
+<!--    </record>-->
+
+    <record id="report_event_registration_badge" model="ir.actions.report">
+        <field name="name">Partner Contact</field>
+        <field name="model">customer.credit</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">task_3.report_customers_contact</field>
+        <field name="report_file">task_3.report_customers_contact</field>
+        <field name="print_report_name">'Partner Contact - %s' % (object.partner_id.name or 'Unnamed').replace('/','')
+        </field>
+<!--        <field name="paperformat_id" ref="task_3.paperformat_frenchcheck"/>-->
+        <field name="binding_model_id" ref="model_customer_credit"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

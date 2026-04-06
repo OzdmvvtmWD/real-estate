@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="customer_credits_action" model="ir.actions.act_window">
+        <field name="name">Customer Credits Views</field>
+        <field name="res_model">customer.credit</field>
+        <field name="view_mode">tree,form,pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Credit
+            </p>
+        </field>
+    </record>
+
+    <record id="customer_credit_tree_view" model="ir.ui.view">
+        <field name="name">customer.credit.tree</field>
+        <field name="model">customer.credit</field>
+        <field name="arch" type="xml">
+            <tree string="Customer's Credits List">
+                <field name="date_of_issue"/>
+                <field name="credits_sum"/>
+                <field name="credits_percent" string="Credits Percent (%)"/>
+                <field name="credits_percent_sum" string="Credits Percent Summary"/>
+                <field name="partner_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="customer_credit_pivot_view" model="ir.ui.view">
+        <field name="name">customer.credit.pivot.view</field>
+        <field name="model">customer.credit</field>
+        <field name="arch" type="xml">
+            <pivot string="Customer's Credits Pivot">
+                <field name="credits_percent_sum" type="measure"/>
+                <field name="partner_id" type="row"/>
+<!--                <field name="credits_percent" type="row"/>-->
+                <field name="credits_sum" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+</odoo>
